@@ -1,8 +1,10 @@
+#include <GL/glew.h>
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleOpenGL.h"
 #include "ModuleWindow.h"
 #include "SDL.h"
+
 
 ModuleOpenGL::ModuleOpenGL()
 {
@@ -25,9 +27,13 @@ bool ModuleOpenGL::Init()
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8); // we want to have a stencil buffer with 8 bits
 
 	context = SDL_GL_CreateContext(App->GetWindow()->window);
-
-
-
+	
+	if (glewInit()) {
+		// … check for errors
+	}
+	
+	LOG("Using Glew %s", glewGetString(GLEW_VERSION));
+	// Should be 2.0
 
 	return true;
 }
@@ -53,6 +59,7 @@ update_status ModuleOpenGL::PostUpdate()
 bool ModuleOpenGL::CleanUp()
 {
 	LOG("Destroying renderer");
+	SDL_GL_DeleteContext(context);
 
 	//Destroy window
 
