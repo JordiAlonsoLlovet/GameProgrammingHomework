@@ -53,15 +53,14 @@ update_status ModuleOpenGL::PreUpdate()
 	glViewport(0, 0, w, h);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	SDL_GL_SwapWindow(App->GetWindow()->window);
+	
+	//SDL_GL_SwapWindow(App->GetWindow()->window);
 	return UPDATE_CONTINUE;
 }
 
 // Called every draw update
 update_status ModuleOpenGL::Update()
 {
-
 	return UPDATE_CONTINUE;
 }
 
