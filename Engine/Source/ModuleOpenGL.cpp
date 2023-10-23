@@ -28,10 +28,8 @@ bool ModuleOpenGL::Init()
 
 	context = SDL_GL_CreateContext(App->GetWindow()->window);
 	
-	if (glewInit()) {
-		// … check for errors
-	}
-	
+	GLenum err = glewInit();
+	// … check for errors
 	LOG("Using Glew %s", glewGetString(GLEW_VERSION));
 	// Should be 2.0
 
