@@ -78,7 +78,7 @@ bool ModuleSceneKen::CleanUp()
 // Update: draw background
 update_status ModuleSceneKen::Update()
 {
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
 		App->fade->FadeToBlack(App->scene_honda, this, 10.0f);
 
 	// TODO 5: make sure the ship goes up and down
