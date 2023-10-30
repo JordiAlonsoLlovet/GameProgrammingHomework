@@ -4,7 +4,8 @@
 #include "ModuleOpenGL.h"
 #include "ModuleWindow.h"
 #include "SDL.h"
-#include <iostream>
+
+//#include "backends/imgui_impl_opengl3_loader.h"
 
 
 ModuleOpenGL::ModuleOpenGL()
@@ -54,18 +55,20 @@ update_status ModuleOpenGL::PreUpdate()
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	//SDL_GL_SwapWindow(App->GetWindow()->window);
+	
 	return UPDATE_CONTINUE;
 }
 
 // Called every draw update
 update_status ModuleOpenGL::Update()
 {
+	
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleOpenGL::PostUpdate()
 {
+	SDL_GL_SwapWindow(App->GetWindow()->window);
 	return UPDATE_CONTINUE;
 }
 

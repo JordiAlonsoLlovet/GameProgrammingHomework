@@ -74,6 +74,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -99,7 +100,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\SDL\include;.\glew-2.1.0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\SDL\include;.\glew-2.1.0\include;.\imgui-docking;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,8 +144,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="imgui-docking\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="imgui-docking\backends\imgui_impl_sdl2.cpp" />
+    <ClCompile Include="imgui-docking\imgui.cpp" />
+    <ClCompile Include="imgui-docking\imgui_demo.cpp" />
+    <ClCompile Include="imgui-docking\imgui_draw.cpp" />
+    <ClCompile Include="imgui-docking\imgui_tables.cpp" />
+    <ClCompile Include="imgui-docking\imgui_widgets.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ModuleEditor.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleOpenGL.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
@@ -153,7 +162,17 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Dummy.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="imgui-docking\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="imgui-docking\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="imgui-docking\backends\imgui_impl_sdl2.h" />
+    <ClInclude Include="imgui-docking\imconfig.h" />
+    <ClInclude Include="imgui-docking\imgui.h" />
+    <ClInclude Include="imgui-docking\imgui_internal.h" />
+    <ClInclude Include="imgui-docking\imstb_rectpack.h" />
+    <ClInclude Include="imgui-docking\imstb_textedit.h" />
+    <ClInclude Include="imgui-docking\imstb_truetype.h" />
     <ClInclude Include="Module.h" />
+    <ClInclude Include="ModuleEditor.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleOpenGL.h" />
     <ClInclude Include="ModuleWindow.h" />

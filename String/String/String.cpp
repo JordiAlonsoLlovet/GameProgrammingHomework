@@ -3,8 +3,8 @@
 class String {
 public:
 	String(const char* s) : text(s) {	}
-	String(const String &s) {
-		text = s.text;
+	String(const String &s) : text(s.text) {
+		
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const String& s);
