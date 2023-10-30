@@ -25,6 +25,10 @@ mono_crash.*
 # Visual Studio 2017 auto generated files
 Generated\ Files/
 
+x64/
+Release/
+Debug/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
