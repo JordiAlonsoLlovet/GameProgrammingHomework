@@ -21,4 +21,5 @@ public:
 
 public:
 	void* context;
+	unsigned int VBO;
 };
