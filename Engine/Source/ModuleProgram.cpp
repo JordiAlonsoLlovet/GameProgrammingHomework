@@ -1,20 +1,27 @@
 
 #include "Globals.h"
+#include "Application.h"
 #include "ModuleProgram.h"
+#include "ModuleWindow.h"
+#include "MathGeoLib.h"
+#include "debug_draw/ModuleDebugDraw.h"
+#include "SDL.h"
 
 ModuleProgram::ModuleProgram() {}
 ModuleProgram::~ModuleProgram() {}
 
 bool ModuleProgram::Init() {
-	char* vSource = LoadShaderSource("C:/Users/jordial3/Documents/GameProgrammingHomework/Engine/Source/VertexShader.glsl");
-	char* fSource = LoadShaderSource("C:/Users/jordial3/Documents/GameProgrammingHomework/Engine/Source/FragmentShader.glsl");
+	char* vSource = LoadShaderSource("../Source/VertexShader.glsl");
+	char* fSource = LoadShaderSource("../Source/FragmentShader.glsl");
 	GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, vSource);
-	GLuint fragmentShader = CompileShader(GL_VERTEX_SHADER, fSource);
+	GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fSource);
 	program = CreateProgram(vertexShader, fragmentShader);
+	
 	return 1;
 }
 
 update_status ModuleProgram::PreUpdate() {
+	//glUseProgram(program);
 	return UPDATE_CONTINUE;
 }
 
@@ -99,14 +106,37 @@ unsigned ModuleProgram::CreateProgram(unsigned vtx_shader, unsigned frg_shader)
 }
 
 // This function must be called each frame for drawing the triangle
-void ModuleProgram::RenderVBO(unsigned vbo, unsigned program)
+void ModuleProgram::RenderVBO(unsigned vbo)
 {
+	Frustum frustum;
+	frustum.type = FrustumType::PerspectiveFrustum;
+	frustum.pos = float3(0.0f, 1.0f, 5.0f);
+	frustum.front = -float3::unitZ;
+	frustum.up = float3::unitY;
+	frustum.nearPlaneDistance = 0.1f;
+	frustum.farPlaneDistance = 100.0f;
+	frustum.verticalFov = math::pi / 4.0f;
+	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f));
+	float4x4 proj = frustum.ProjectionMatrix();
+	float4x4 model = float4x4::FromTRS(float3(0.0f, 0.0f, -2.0f),
+		float4x4::RotateZ(pi / 4.0f),
+		float3(1.0f, 1.0f, 1.0f));
+	float4x4 view = frustum.ViewMatrix();
+	
+	glUseProgram(program);
+	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &proj[0][0]);
+
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
 	glEnableVertexAttribArray(0);
 	// size = 3 float per vertex
-	// stride = 0 is equivalent to stride = sizeof(float)*3
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glUseProgram(program);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
+
 	// 1 triangle to draw = 3 vertices
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+	int w; int h;
+	SDL_GetWindowSize(App->GetWindow()->window, &w, &h);
+	App->GetDD()->Draw(view, proj, w, h);
 }

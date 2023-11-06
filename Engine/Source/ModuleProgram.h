@@ -22,8 +22,8 @@ public:
 	char* LoadShaderSource(const char* shader_file_name);
 	unsigned CompileShader(unsigned type, const char* source);
 	unsigned CreateProgram(unsigned vtx_shader, unsigned frg_shader);
-	void RenderVBO(unsigned vbo, unsigned program);
+	void RenderVBO(unsigned vbo);
 
-private:
+
 	GLuint program;
 };
