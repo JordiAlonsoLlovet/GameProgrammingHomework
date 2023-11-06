@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleOpenGL.h"
+#include "ModuleCamera.h"
 #include "SDL/include/SDL.h"
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
@@ -36,14 +37,18 @@ update_status ModuleInput::Update()
 
     while (SDL_PollEvent(&sdlEvent) != 0)
     {
-        ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+        //ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
         switch (sdlEvent.type)
         {
             case SDL_QUIT:
                 return UPDATE_STOP;
             case SDL_WINDOWEVENT:
                 if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED || sdlEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+                {
                     App->GetOpenGL()->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
+                    App->GetCamera()->SetAspectRatio(sdlEvent.window.data2 / (double)sdlEvent.window.data1);
+                }
+                    
                 break;
         }
     }

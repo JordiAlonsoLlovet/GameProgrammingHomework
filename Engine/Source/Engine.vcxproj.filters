@@ -130,6 +130,7 @@
     <ClCompile Include="debug_draw\ModuleDebugDraw.cpp">
       <Filter>debug_draw</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -377,6 +378,9 @@
     </ClInclude>
     <ClInclude Include="debug_draw\ModuleDebugDraw.h">
       <Filter>debug_draw</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleCamera.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

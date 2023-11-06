@@ -4,6 +4,7 @@
 #include "ModuleProgram.h"
 #include "ModuleWindow.h"
 #include "MathGeoLib.h"
+#include "ModuleCamera.h"
 #include "debug_draw/ModuleDebugDraw.h"
 #include "SDL.h"
 
@@ -108,20 +109,11 @@ unsigned ModuleProgram::CreateProgram(unsigned vtx_shader, unsigned frg_shader)
 // This function must be called each frame for drawing the triangle
 void ModuleProgram::RenderVBO(unsigned vbo)
 {
-	Frustum frustum;
-	frustum.type = FrustumType::PerspectiveFrustum;
-	frustum.pos = float3(0.0f, 1.0f, 5.0f);
-	frustum.front = -float3::unitZ;
-	frustum.up = float3::unitY;
-	frustum.nearPlaneDistance = 0.1f;
-	frustum.farPlaneDistance = 100.0f;
-	frustum.verticalFov = math::pi / 4.0f;
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f));
-	float4x4 proj = frustum.ProjectionMatrix();
+	float4x4 proj = App->GetCamera()->GetProjection();
 	float4x4 model = float4x4::FromTRS(float3(0.0f, 0.0f, -2.0f),
 		float4x4::RotateZ(pi / 4.0f),
 		float3(1.0f, 1.0f, 1.0f));
-	float4x4 view = frustum.ViewMatrix();
+	float4x4 view = App->GetCamera()->GetView();
 	
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &model[0][0]);

@@ -5,7 +5,6 @@
 #include "ModuleWindow.h"
 #include "SDL.h"
 
-//#include "backends/imgui_impl_opengl3_loader.h"
 
 void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
@@ -61,9 +60,7 @@ bool ModuleOpenGL::Init()
 
 update_status ModuleOpenGL::PreUpdate()
 {
-	int w; int h;
-	SDL_GetWindowSize(App->GetWindow()->window, &w, &h);
-	glViewport(0, 0, w, h);
+		
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -97,6 +94,7 @@ bool ModuleOpenGL::CleanUp()
 
 void ModuleOpenGL::WindowResized(unsigned width, unsigned height)
 {
+	glViewport(0, 0, width, height);
 }
 
 void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)

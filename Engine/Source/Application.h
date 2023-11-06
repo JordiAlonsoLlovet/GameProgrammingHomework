@@ -6,6 +6,7 @@
 
 class ModuleOpenGL;
 class ModuleWindow;
+class ModuleCamera;
 class ModuleEditor;
 class ModuleTextures;
 class ModuleInput;
@@ -28,6 +29,7 @@ public:
     ModuleOpenGL* GetOpenGL() { return render; }
     ModuleWindow* GetWindow() { return window; }
     ModuleInput*  GetInput() { return input; }
+    ModuleCamera* GetCamera() { return camera; }
     ModuleProgram* GetProgram() { return program; }
     ModuleDebugDraw* GetDD() { return dd; }
 
@@ -36,6 +38,7 @@ private:
     ModuleOpenGL* render = nullptr;
     ModuleWindow* window = nullptr;
     ModuleInput* input = nullptr;
+    ModuleCamera* camera = nullptr;
     ModuleProgram* program = nullptr;
     ModuleEditor* editor = nullptr;
     ModuleRenderExercice* exercice = nullptr;

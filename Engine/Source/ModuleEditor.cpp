@@ -38,30 +38,32 @@ bool ModuleEditor::Init() {
 }
 
 update_status ModuleEditor::PreUpdate() {
-    bool show = true;
+    
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame(App->GetWindow()->window);
     ImGui::NewFrame();
+    
+
+    return UPDATE_CONTINUE;
+}
+
+update_status ModuleEditor::Update() {
+    static bool show = true;
     ImGui::ShowDemoWindow(&show);
     ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
     ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
     ImGui::Checkbox("Demo Window", &show);
     ImGui::End();
-
-    return UPDATE_CONTINUE;
-}
-
-update_status ModuleEditor::Update() {
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    ImGui::UpdatePlatformWindows();
-    ImGui::RenderPlatformWindowsDefault();
+    
     return UPDATE_CONTINUE;
 }
 
 update_status ModuleEditor::PostUpdate() {
-    
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    ImGui::UpdatePlatformWindows();
+    ImGui::RenderPlatformWindowsDefault();
     return UPDATE_CONTINUE;
 }
 

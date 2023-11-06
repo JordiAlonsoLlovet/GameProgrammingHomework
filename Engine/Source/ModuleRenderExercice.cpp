@@ -6,8 +6,6 @@
 #include "SDL.h"
 #include "debug_draw/debugdraw.h"
 
-//#include "backends/imgui_impl_opengl3_loader.h"
-
 
 ModuleRenderExercice::ModuleRenderExercice()
 {
