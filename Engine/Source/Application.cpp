@@ -14,10 +14,10 @@ using namespace std;
 Application::Application()
 {
 	// Order matters: they will Init/start/update in this order
+	modules.push_back(input = new ModuleInput());
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(render = new ModuleOpenGL());
 	modules.push_back(editor = new ModuleEditor());
-	modules.push_back(input = new ModuleInput());
 	modules.push_back(camera = new ModuleCamera());
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(exercice = new ModuleRenderExercice());
@@ -34,6 +34,7 @@ Application::~Application()
 
 bool Application::Init()
 {
+	ptime = clock();
 	bool ret = true;
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
@@ -44,6 +45,8 @@ bool Application::Init()
 
 update_status Application::Update()
 {
+	deltaTime = (clock() - ptime) /(double) CLOCKS_PER_SEC;
+	ptime = clock();
 	update_status ret = UPDATE_CONTINUE;
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)

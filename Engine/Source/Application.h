@@ -32,6 +32,7 @@ public:
     ModuleCamera* GetCamera() { return camera; }
     ModuleProgram* GetProgram() { return program; }
     ModuleDebugDraw* GetDD() { return dd; }
+    double GetDeltaTime() { return deltaTime; }
 
 private:
 
@@ -45,6 +46,8 @@ private:
     ModuleDebugDraw* dd = nullptr;
 
     std::list<Module*> modules;
+    double ptime;
+    double deltaTime;
 
 };
 

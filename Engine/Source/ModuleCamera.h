@@ -3,7 +3,6 @@
 
 class Application;
 
-
 class ModuleCamera : public Module
 {
 public:
@@ -19,6 +18,10 @@ public:
 	bool SetFOV(float fov);
 	bool SetAspectRatio(float aspect);
 	bool LookAt(float x, float y, float z);
+	float3 MoveCamera(float3 movement);
+	void RotateH(double alpha);
+	void RotateV(double alpha);
+	void Rotate(double alpha, float3 axis);
 
 private:
 	Frustum camera;

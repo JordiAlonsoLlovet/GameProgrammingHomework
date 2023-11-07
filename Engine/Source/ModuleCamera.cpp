@@ -1,6 +1,9 @@
 #include "Globals.h"
 #include "ModuleCamera.h"
 #include "MathGeoLib.h"
+#include "Application.h"
+#include "ModuleInput.h"
+#include "SDL.h"
 
 ModuleCamera::ModuleCamera() {}
 ModuleCamera::~ModuleCamera() {}
@@ -19,7 +22,35 @@ bool ModuleCamera::Init() {
 }
 
 update_status ModuleCamera::Update() {
-    
+	float deltaMove = App->GetDeltaTime()* CAMERA_SPEED;
+	float deltaTurn = App->GetDeltaTime() * CAMERA_TURNING_SPEED;
+	if (App->GetInput()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+		deltaMove *= 2;
+	float3 m = float3(0.0f, 0.0f, 0.0f);
+	if (App->GetInput()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		m += camera.front.Normalized() * deltaMove;
+	if (App->GetInput()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+		m += camera.front.Normalized() * -deltaMove;
+	if (App->GetInput()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		m += camera.front.Cross(camera.up).Normalized() * -deltaMove;
+	if (App->GetInput()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		m += camera.front.Cross(camera.up).Normalized() * deltaMove;
+	if (App->GetInput()->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
+		m.y += deltaMove;
+	if (App->GetInput()->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
+		m.y -= deltaMove;
+
+	if (App->GetInput()->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		RotateH(-deltaTurn);
+	if (App->GetInput()->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		RotateH(deltaTurn);
+	if (App->GetInput()->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		RotateV(deltaTurn);
+	if (App->GetInput()->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		RotateV(-deltaTurn);
+		
+	
+	camera.pos += m;
     return UPDATE_CONTINUE;
 }
 
@@ -50,4 +81,38 @@ bool ModuleCamera::LookAt(float x, float y, float z)
 	direction.Normalize();
 	camera.front = direction;
 	return 1;
+}
+
+float3 ModuleCamera::MoveCamera(float3 movement)
+{
+	camera.pos += movement;
+	return camera.pos;
+}
+
+void ModuleCamera::RotateV(double alpha)
+{
+	float3 axis = camera.front.Cross(camera.up).Normalized();
+	Rotate(alpha, axis);
+}
+
+void ModuleCamera::RotateH(double alpha) //Rotates around world axis
+{
+	float3 axis = float3::unitY;
+	Rotate(alpha, axis);
+	/*float3 v = camera.front;
+	float x2 = v.x * cos(alpha) - v.z * sin(alpha);
+	float z2 = v.x * sin(alpha) + v.z * cos(alpha);
+	camera.front = float3{ x2, v.y, z2 };
+	camera.front.Normalize();*/
+}
+
+void ModuleCamera::Rotate(double alpha, float3 axis)
+{
+	float3x3 cpMatrix = {
+		0, -axis.z, axis.y,
+		axis.z, 0, -axis.x,
+		-axis.y, axis.x, 0 };
+	float3x3 r = float3x3::identity * cos(alpha) + cpMatrix * sin(alpha) + axis.OuterProduct(axis) * (1 - cos(alpha));
+	camera.front = r * camera.front;
+	camera.up = r * camera.up;
 }

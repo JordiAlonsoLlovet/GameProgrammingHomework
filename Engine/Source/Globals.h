@@ -6,6 +6,8 @@
 
 void log(const char file[], int line, const char* format, ...);
 
+
+
 enum update_status
 {
 	UPDATE_CONTINUE = 1,
@@ -19,3 +21,25 @@ enum update_status
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Super Awesome Engine"
+#define CAMERA_SPEED 5
+#define CAMERA_TURNING_SPEED pi / 4
+
+// Deletes a buffer
+#define RELEASE( x ) \
+    {\
+       if( x != nullptr )\
+       {\
+         delete x;\
+	     x = nullptr;\
+       }\
+    }
+
+// Deletes an array of buffers
+#define RELEASE_ARRAY( x ) \
+	{\
+       if( x != nullptr )\
+       {\
+           delete[] x;\
+	       x = nullptr;\
+		 }\
+	 }
