@@ -95,15 +95,11 @@ void ModuleCamera::RotateV(double alpha)
 	Rotate(alpha, axis);
 }
 
-void ModuleCamera::RotateH(double alpha) //Rotates around world axis
+void ModuleCamera::RotateH(double alpha) 
 {
-	float3 axis = float3::unitY;
+	float3 axis = float3::unitY; //Rotates around world axis
+	//float3 axis = camera.up; //Rotates around local axis
 	Rotate(alpha, axis);
-	/*float3 v = camera.front;
-	float x2 = v.x * cos(alpha) - v.z * sin(alpha);
-	float z2 = v.x * sin(alpha) + v.z * cos(alpha);
-	camera.front = float3{ x2, v.y, z2 };
-	camera.front.Normalize();*/
 }
 
 void ModuleCamera::Rotate(double alpha, float3 axis)
