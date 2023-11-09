@@ -11,33 +11,6 @@
 ModuleProgram::ModuleProgram() {}
 ModuleProgram::~ModuleProgram() {}
 
-bool ModuleProgram::Init() {
-	char* vSource = LoadShaderSource("../Source/VertexShader.glsl");
-	char* fSource = LoadShaderSource("../Source/FragmentShader.glsl");
-	GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, vSource);
-	GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fSource);
-	program = CreateProgram(vertexShader, fragmentShader);
-	
-	return 1;
-}
-
-update_status ModuleProgram::PreUpdate() {
-	//glUseProgram(program);
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleProgram::Update() {
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleProgram::PostUpdate() {
-	return UPDATE_CONTINUE;
-}
-
-bool ModuleProgram::CleanUp() {
-	glDeleteProgram(program);
-	return 1;
-}
 
 char* ModuleProgram::LoadShaderSource(const char* shader_file_name)
 {
@@ -107,11 +80,11 @@ unsigned ModuleProgram::CreateProgram(unsigned vtx_shader, unsigned frg_shader)
 }
 
 // This function must be called each frame for drawing the triangle
-void ModuleProgram::RenderVBO(unsigned vbo)
+void ModuleProgram::RenderVBO(unsigned vbo, unsigned program)
 {
 	float4x4 proj = App->GetCamera()->GetProjection();
 	float4x4 model = float4x4::FromTRS(float3(0.0f, 0.0f, -2.0f),
-		float4x4::RotateZ(pi / 4.0f),
+		float4x4::RotateZ(0),
 		float3(1.0f, 1.0f, 1.0f));
 	float4x4 view = App->GetCamera()->GetView();
 	
@@ -127,7 +100,7 @@ void ModuleProgram::RenderVBO(unsigned vbo)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
 
 	// 1 triangle to draw = 3 vertices
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 	int w; int h;
 	SDL_GetWindowSize(App->GetWindow()->window, &w, &h);
 	App->GetDD()->Draw(view, proj, w, h);

@@ -20,15 +20,26 @@ ModuleRenderExercice::~ModuleRenderExercice()
 // Called before render is available
 bool ModuleRenderExercice::Init()
 {
+	char* vSource = App->GetProgram()->LoadShaderSource("../Source/VertexShader.glsl");
+	char* fSource = App->GetProgram()->LoadShaderSource("../Source/FragmentShader.glsl");
+	GLuint vertexShader = App->GetProgram()->CompileShader(GL_VERTEX_SHADER, vSource);
+	GLuint fragmentShader = App->GetProgram()->CompileShader(GL_FRAGMENT_SHADER, fSource);
+	program = App->GetProgram()->CreateProgram(vertexShader, fragmentShader);
+
 	float vtx_data[] = { 
-		-1.0f, -1.0f, 0.0f, 
-		1.0f, -1.0f, 0.0f, 
-		0.0f, 1.0f, 0.0f };
+		1.0f, -1.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
+		-1.0f, -1.0f, 0.0f,
+
+		1.0f, 1.0f, 0.0f, 
+		-1.0f, 1.0f, 0.0f, 
+		-1.0f, -1.0f, 0.0f
+		 };
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo); // set vbo active 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vtx_data), vtx_data, GL_STATIC_DRAW);
-
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vtx_data2), vtx_data, GL_STATIC_DRAW);
 
 	return true;
 }
@@ -43,7 +54,7 @@ update_status ModuleRenderExercice::PreUpdate()
 // Called every draw update
 update_status ModuleRenderExercice::Update()
 {
-	App->GetProgram()->RenderVBO(vbo);
+	App->GetProgram()->RenderVBO(vbo, program);
 	return UPDATE_CONTINUE;
 }
 
@@ -55,7 +66,7 @@ update_status ModuleRenderExercice::PostUpdate()
 // Called before quitting
 bool ModuleRenderExercice::CleanUp()
 {
-
+	glDeleteProgram(program);
 	return true;
 }
 

@@ -20,4 +20,7 @@ public:
 
 public:
 	unsigned int vbo;
+
+private:
+	unsigned program;
 };

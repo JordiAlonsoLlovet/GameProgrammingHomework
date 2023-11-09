@@ -14,16 +14,9 @@ public:
 	ModuleProgram();
 	~ModuleProgram();
 
-	bool Init();
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
-	bool CleanUp();
-	char* LoadShaderSource(const char* shader_file_name);
-	unsigned CompileShader(unsigned type, const char* source);
-	unsigned CreateProgram(unsigned vtx_shader, unsigned frg_shader);
-	void RenderVBO(unsigned vbo);
+	static char* LoadShaderSource(const char* shader_file_name);
+	static unsigned CompileShader(unsigned type, const char* source);
+	static unsigned CreateProgram(unsigned vtx_shader, unsigned frg_shader);
+	static void RenderVBO(unsigned vbo, unsigned program);
 
-
-	GLuint program;
 };

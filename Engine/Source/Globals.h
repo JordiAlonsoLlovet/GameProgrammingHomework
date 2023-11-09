@@ -22,7 +22,7 @@ enum update_status
 #define VSYNC true
 #define TITLE "Super Awesome Engine"
 #define CAMERA_SPEED 5
-#define CAMERA_TURNING_SPEED pi / 4
+#define CAMERA_TURNING_SPEED pi / 2
 
 // Deletes a buffer
 #define RELEASE( x ) \
