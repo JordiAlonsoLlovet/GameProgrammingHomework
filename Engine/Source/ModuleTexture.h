@@ -4,15 +4,14 @@
 
 class ModuleTexture : public Module
 {
-	bool Init()
-	{
-		LOG("Dummy Init!");
-		return true;
-	}
+public:
+	bool Init();
+	update_status Update();
+	bool CleanUp();
 
-	bool CleanUp()
-	{
-		LOG("Dummy CleanUp!");
-		return true;
-	}
+	HRESULT LoadTextureFromFile(LPCWSTR tex_filename);
+	private:
+		GLuint* textures;
+		DirectX::TexMetadata imageMetadata;
+		DirectX::ScratchImage* image;
 };
