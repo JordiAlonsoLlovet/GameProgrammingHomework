@@ -3,6 +3,7 @@
 #include "ModuleRenderExercise.h"
 #include "Application.h"
 #include "ModuleProgram.h"
+#include "ModuleTexture.h"
 #include "SDL.h"
 #include "debug_draw/debugdraw.h"
 
@@ -20,6 +21,8 @@ ModuleRenderExercice::~ModuleRenderExercice()
 // Called before render is available
 bool ModuleRenderExercice::Init()
 {
+	App->GetTexture()->LoadTextureFromFile(L"./Test-image-Baboon.ppm");
+	App->GetTexture()->LoadTextureGPU();
 	char* vSource = App->GetProgram()->LoadShaderSource("../Source/VertexShader.glsl");
 	char* fSource = App->GetProgram()->LoadShaderSource("../Source/FragmentShader.glsl");
 	GLuint vertexShader = App->GetProgram()->CompileShader(GL_VERTEX_SHADER, vSource);
@@ -31,9 +34,14 @@ bool ModuleRenderExercice::Init()
 		1.0f, 1.0f, 0.0f,
 		-1.0f, -1.0f, 0.0f,
 
-		1.0f, 1.0f, 0.0f, 
+		//0.0f, 1.0f, //  v0 texcoord
+		//1.0f, 1.0f, //  v1 texcoord
+		//0.5f, 0.0f // v2 texcoord
+
+
+		/*1.0f, 1.0f, 0.0f, 
 		-1.0f, 1.0f, 0.0f, 
-		-1.0f, -1.0f, 0.0f
+		-1.0f, -1.0f, 0.0f*/
 		 };
 
 	glGenBuffers(1, &vbo);
@@ -54,6 +62,7 @@ update_status ModuleRenderExercice::PreUpdate()
 // Called every draw update
 update_status ModuleRenderExercice::Update()
 {
+	App->GetTexture()->LoadTextureGPU();
 	App->GetProgram()->RenderVBO(vbo, program);
 	return UPDATE_CONTINUE;
 }
