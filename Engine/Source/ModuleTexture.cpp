@@ -64,7 +64,7 @@ HRESULT ModuleTexture::LoadTextureGPU() {
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textures);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    //glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 
     return S_OK;
 }

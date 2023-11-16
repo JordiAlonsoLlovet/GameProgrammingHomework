@@ -34,9 +34,9 @@ bool ModuleRenderExercice::Init()
 		1.0f, 1.0f, 0.0f,
 		-1.0f, -1.0f, 0.0f,
 
-		//0.0f, 1.0f, //  v0 texcoord
-		//1.0f, 1.0f, //  v1 texcoord
-		//0.5f, 0.0f // v2 texcoord
+		0.0f, 1.0f, //  v0 texcoord
+		1.0f, 1.0f, //  v1 texcoord
+		0.5f, 0.0f // v2 texcoord
 
 
 		/*1.0f, 1.0f, 0.0f, 
@@ -47,7 +47,6 @@ bool ModuleRenderExercice::Init()
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo); // set vbo active 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vtx_data), vtx_data, GL_STATIC_DRAW);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vtx_data2), vtx_data, GL_STATIC_DRAW);
 
 	return true;
 }
