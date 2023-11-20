@@ -14,6 +14,7 @@ class ModuleRenderExercise;
 class ModuleProgram;
 class ModuleRenderExercice;
 class ModuleDebugDraw;
+class ModuleTexture;
 
 class Application
 {
@@ -32,6 +33,7 @@ public:
     ModuleCamera* GetCamera() { return camera; }
     ModuleProgram* GetProgram() { return program; }
     ModuleDebugDraw* GetDD() { return dd; }
+    ModuleTexture* GetTexture() { return texture; }
     double GetDeltaTime() { return deltaTime; }
 
 private:
@@ -44,6 +46,7 @@ private:
     ModuleEditor* editor = nullptr;
     ModuleRenderExercice* exercice = nullptr;
     ModuleDebugDraw* dd = nullptr;
+    ModuleTexture* texture = nullptr;
 
     std::list<Module*> modules;
     double ptime;

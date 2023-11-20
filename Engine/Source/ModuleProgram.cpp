@@ -92,15 +92,21 @@ void ModuleProgram::RenderVBO(unsigned vbo, unsigned program)
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &model[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &view[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &proj[0][0]);
+	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
 	glEnableVertexAttribArray(0);
+
 	// size = 3 float per vertex
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
 
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)(sizeof(float) * 4*3));	
+	
+
 	// 1 triangle to draw = 3 vertices
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int w; int h;
 	SDL_GetWindowSize(App->GetWindow()->window, &w, &h);
 	App->GetDD()->Draw(view, proj, w, h);
