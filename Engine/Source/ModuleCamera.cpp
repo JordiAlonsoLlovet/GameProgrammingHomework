@@ -111,4 +111,5 @@ void ModuleCamera::Rotate(double alpha, float3 axis)
 	float3x3 r = float3x3::identity * cos(alpha) + cpMatrix * sin(alpha) + axis.OuterProduct(axis) * (1 - cos(alpha));
 	camera.front = r * camera.front;
 	camera.up = r * camera.up;
+	LOG("{%3f, %3f, %3f}", camera.front.x, camera.front.y, camera.front.z);
 }
