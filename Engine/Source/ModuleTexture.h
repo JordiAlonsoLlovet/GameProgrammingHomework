@@ -1,11 +1,19 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "DirectXTex.h"
 
+namespace DirectX {
+	class TexMetadata;
+	class ScratchImage;
+}
+	
 class ModuleTexture : public Module
 {
 public:
+	ModuleTexture();
+
+	// Destructor
+	virtual ~ModuleTexture();
 	bool Init();
 	bool CleanUp();
 
@@ -13,8 +21,9 @@ public:
 	HRESULT LoadTextureGPU();
 	void RenderTex();
 
-	private:
-		unsigned int textures;
-		DirectX::TexMetadata imageMetadata;
-		DirectX::ScratchImage* image;
+private:
+	unsigned int textures;
+	DirectX::TexMetadata* imageMetadata;
+	DirectX::ScratchImage* image;
 };
+
