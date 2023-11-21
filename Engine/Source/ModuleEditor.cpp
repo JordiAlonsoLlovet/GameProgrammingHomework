@@ -4,6 +4,7 @@
 #include "ModuleWindow.h"
 #include "ModuleOpenGL.h"
 #include "imgui.h"
+#include "ModuleTimer.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
 
@@ -46,7 +47,6 @@ update_status ModuleEditor::PreUpdate() {
 
     return UPDATE_CONTINUE;
 }
-
 update_status ModuleEditor::Update() {
     static bool show = false;
     if (show)
@@ -55,6 +55,10 @@ update_status ModuleEditor::Update() {
 
     ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
     ImGui::Checkbox("Demo Window", &show);
+    float dt = App->GetClock()->GetDeltaTime();
+    float fps = 1.0 / dt;
+    char* t = FORMAT("FOV: %.0f", fps);
+    ImGui::Text(t);
     ImGui::End();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

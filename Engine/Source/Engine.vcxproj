@@ -152,7 +152,8 @@
     <ClCompile Include="imgui-docking\imgui_draw.cpp" />
     <ClCompile Include="imgui-docking\imgui_tables.cpp" />
     <ClCompile Include="imgui-docking\imgui_widgets.cpp" />
-    <ClCompile Include="log.cpp" />
+    <ClCompile Include="ModuleTimer.cpp" />
+    <ClCompile Include="tools.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MathGeoLib\include\Algorithm\Random\LCG.cpp" />
     <ClCompile Include="MathGeoLib\include\Geometry\AABB.cpp" />
@@ -279,6 +280,7 @@
     <ClInclude Include="ModuleProgram.h" />
     <ClInclude Include="ModuleRenderExercise.h" />
     <ClInclude Include="ModuleTexture.h" />
+    <ClInclude Include="ModuleTimer.h" />
     <ClInclude Include="ModuleWindow.h" />
   </ItemGroup>
   <ItemGroup>

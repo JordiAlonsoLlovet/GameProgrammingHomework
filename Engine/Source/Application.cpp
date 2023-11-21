@@ -7,6 +7,8 @@
 #include "ModuleEditor.h"
 #include "ModuleProgram.h"
 #include "ModuleTexture.h"
+#include "ModuleTimer.h"
+#include "ModuleTimer.h"
 #include "ModuleRenderExercise.h"
 #include "debug_draw/ModuleDebugDraw.h"
 
@@ -15,6 +17,7 @@ using namespace std;
 Application::Application()
 {
 	// Order matters: they will Init/start/update in this order
+	modules.push_back(clock = new ModuleTimer());
 	modules.push_back(input = new ModuleInput());
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(render = new ModuleOpenGL());
@@ -35,8 +38,7 @@ Application::~Application()
 }
 
 bool Application::Init()
-{
-	ptime = clock();
+{	
 	bool ret = true;
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
@@ -46,9 +48,7 @@ bool Application::Init()
 }
 
 update_status Application::Update()
-{
-	deltaTime = (clock() - ptime) /(double) CLOCKS_PER_SEC;
-	ptime = clock();
+{	
 	update_status ret = UPDATE_CONTINUE;
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)

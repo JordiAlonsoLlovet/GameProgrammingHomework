@@ -7,6 +7,7 @@
 #include "SDL.h"
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
+#include <string>
 
 ModuleInput::ModuleInput() : Module(), mouse(), mouse_motion{}
 {
@@ -66,15 +67,20 @@ update_status ModuleInput::Update()
 	//memset(windowEvents, false, WE_COUNT * sizeof(bool));
 
 			const Uint8* keys = SDL_GetKeyboardState(NULL);
-
 			for (int i = 0; i < MAX_KEYS; ++i)
 			{
 				if (keys[i] == 1)
 				{
-					if (keyboard[i] == KEY_IDLE)
+					if (keyboard[i] == KEY_IDLE) {
+						LOG("DOWN");
 						keyboard[i] = KEY_DOWN;
+					}
+						
 					else
+					{
+						LOG("REPEAT");
 						keyboard[i] = KEY_REPEAT;
+					}
 				}
 				else
 				{
@@ -83,8 +89,8 @@ update_status ModuleInput::Update()
 					else
 						keyboard[i] = KEY_IDLE;
 				}
+	
 			}
-
 			for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
 			{
 				if (mouse_buttons[i] == KEY_DOWN)

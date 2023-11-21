@@ -42,6 +42,11 @@ public:
 		return mouse_buttons[id - 1];
 	}
 
+	bool KeyPress(int id) const
+	{
+		return keyboard[id] == KEY_REPEAT || keyboard[id] == KEY_DOWN;
+	}
+
 private:
 	KeyState *keyboard = NULL;
 	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];

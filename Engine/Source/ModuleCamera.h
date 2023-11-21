@@ -25,7 +25,6 @@ public:
 
 private:
 	Frustum camera;
-	float fov;
-	float aspect;
+	float currentAspect;
 
 };

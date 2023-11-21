@@ -3,6 +3,7 @@
 #include "MathGeoLib.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleTimer.h"
 #include "SDL.h"
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
@@ -12,7 +13,7 @@ ModuleCamera::ModuleCamera() {}
 ModuleCamera::~ModuleCamera() {}
 
 bool ModuleCamera::Init() {
-	float aspect = SCREEN_HEIGHT / (double)SCREEN_WIDTH;
+	currentAspect = SCREEN_HEIGHT / (double)SCREEN_WIDTH;
 	camera.type = FrustumType::PerspectiveFrustum;
 	camera.pos = float3(0.0f, 1.0f, 5.0f);
 	camera.front = -float3::unitZ;
@@ -20,16 +21,19 @@ bool ModuleCamera::Init() {
 	camera.nearPlaneDistance = 0.1f;
 	camera.farPlaneDistance = 100.0f;
 	camera.horizontalFov = math::pi / 2.0f;
-	camera.verticalFov = 2.f * atanf(tanf(camera.horizontalFov * 0.5f)*aspect);
+	camera.verticalFov = 2.f * atanf(tanf(camera.horizontalFov * 0.5f)* currentAspect);
     return true;
 }
 
 update_status ModuleCamera::Update() {
 	static float cameraSpeed = CAMERA_SPEED;
-	ImGui::SliderFloat("Movement speed", &cameraSpeed, 0.0f, CAMERA_SPEED*4);
-	float deltaMove = App->GetDeltaTime()* cameraSpeed;
-	float deltaTurn = App->GetDeltaTime() * CAMERA_TURNING_SPEED;
-	if (App->GetInput()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+	static float f = math::pi / 2.0f;
+	ImGui::SliderFloat("Movement speed", &cameraSpeed, 0.0f, CAMERA_SPEED*10);
+	if (ImGui::SliderFloat("FOV", &f, 0, pi))
+		SetFOV(f);
+	float deltaMove = App->GetClock()->GetDeltaTime() * cameraSpeed;
+	float deltaTurn = App->GetClock()->GetDeltaTime() * CAMERA_TURNING_SPEED;
+	if (App->GetInput()->KeyPress(SDL_SCANCODE_LSHIFT))
 		deltaMove *= 2;
 	float3 m = float3(0.0f, 0.0f, 0.0f);
 	if (App->GetInput()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
@@ -45,14 +49,15 @@ update_status ModuleCamera::Update() {
 	if (App->GetInput()->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
 		m.y -= deltaMove;
 
-	if (App->GetInput()->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	if (App->GetInput()->KeyPress(SDL_SCANCODE_RIGHT))
 		RotateH(-deltaTurn);
-	if (App->GetInput()->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	if (App->GetInput()->KeyPress(SDL_SCANCODE_LEFT))
 		RotateH(deltaTurn);
-	if (App->GetInput()->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	if (App->GetInput()->KeyPress(SDL_SCANCODE_UP))
 		RotateV(deltaTurn);
-	if (App->GetInput()->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	if (App->GetInput()->KeyPress(SDL_SCANCODE_DOWN))
 		RotateV(-deltaTurn);
+
 		
 	
 	camera.pos += m;
@@ -76,6 +81,14 @@ float4x4 ModuleCamera::GetProjection()
 
 bool ModuleCamera::SetAspectRatio(float aspect) {
 	camera.verticalFov = 2.f * atanf(tanf(camera.horizontalFov * 0.5f) * aspect);
+	currentAspect = aspect;
+	return 1;
+}
+
+bool ModuleCamera::SetFOV(float fov) 
+{
+	camera.horizontalFov = fov;
+	SetAspectRatio(currentAspect);
 	return 1;
 }
 
@@ -116,5 +129,4 @@ void ModuleCamera::Rotate(double alpha, float3 axis)
 	float3x3 r = float3x3::identity * cos(alpha) + cpMatrix * sin(alpha) + axis.OuterProduct(axis) * (1 - cos(alpha));
 	camera.front = r * camera.front;
 	camera.up = r * camera.up;
-	LOG("{%3f, %3f, %3f}", camera.front.x, camera.front.y, camera.front.z);
 }

@@ -15,6 +15,7 @@ class ModuleProgram;
 class ModuleRenderExercice;
 class ModuleDebugDraw;
 class ModuleTexture;
+class ModuleTimer;
 
 class Application
 {
@@ -34,7 +35,7 @@ public:
     ModuleProgram* GetProgram() { return program; }
     ModuleDebugDraw* GetDD() { return dd; }
     ModuleTexture* GetTexture() { return texture; }
-    double GetDeltaTime() { return deltaTime; }
+    ModuleTimer* GetClock() { return clock; }
 
 private:
 
@@ -47,6 +48,7 @@ private:
     ModuleRenderExercice* exercice = nullptr;
     ModuleDebugDraw* dd = nullptr;
     ModuleTexture* texture = nullptr;
+    ModuleTimer* clock = nullptr;
 
     std::list<Module*> modules;
     double ptime;
