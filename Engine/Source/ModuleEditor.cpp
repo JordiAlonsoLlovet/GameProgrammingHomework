@@ -48,7 +48,7 @@ update_status ModuleEditor::PreUpdate() {
 }
 
 update_status ModuleEditor::Update() {
-    static bool show = true;
+    static bool show = false;
     if (show)
         ImGui::ShowDemoWindow(&show);
     ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.

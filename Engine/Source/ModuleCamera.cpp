@@ -4,6 +4,9 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "SDL.h"
+#include "imgui.h"
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_opengl3.h"
 
 ModuleCamera::ModuleCamera() {}
 ModuleCamera::~ModuleCamera() {}
@@ -22,7 +25,9 @@ bool ModuleCamera::Init() {
 }
 
 update_status ModuleCamera::Update() {
-	float deltaMove = App->GetDeltaTime()* CAMERA_SPEED;
+	static float cameraSpeed = CAMERA_SPEED;
+	ImGui::SliderFloat("Movement speed", &cameraSpeed, 0.0f, CAMERA_SPEED*4);
+	float deltaMove = App->GetDeltaTime()* cameraSpeed;
 	float deltaTurn = App->GetDeltaTime() * CAMERA_TURNING_SPEED;
 	if (App->GetInput()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 		deltaMove *= 2;
