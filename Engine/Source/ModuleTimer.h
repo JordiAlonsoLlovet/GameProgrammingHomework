@@ -1,10 +1,9 @@
 #pragma once
-
 #include "Globals.h"
 #include "Module.h"
 
 
-class ModuleTimer : Module
+class ModuleTimer : public Module
 {
 public:
 
@@ -15,12 +14,15 @@ public:
     update_status Update();
     bool CleanUp();
 
-    double GetDeltaTime() { return deltaTime; }
+    long GetDeltaTime() { return deltaTime; }
 
 private:
     const int fpsLimit = 120;
-    double minDelta;
-    double ptime;
-    double deltaTime;
+    float fps = 0.0f;
+    long minDelta;
+    long ptime;
+    long deltaTime;
+    long longTime;
+    int frameCounter = 0;
 
 };

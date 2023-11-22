@@ -71,16 +71,11 @@ update_status ModuleInput::Update()
 			{
 				if (keys[i] == 1)
 				{
-					if (keyboard[i] == KEY_IDLE) {
-						LOG("DOWN");
+					if (keyboard[i] == KEY_IDLE) 
 						keyboard[i] = KEY_DOWN;
-					}
 						
 					else
-					{
-						LOG("REPEAT");
 						keyboard[i] = KEY_REPEAT;
-					}
 				}
 				else
 				{

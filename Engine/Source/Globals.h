@@ -4,8 +4,10 @@
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
 #define FORMAT(format, ...) string_format(format, __VA_ARGS__);
+#define CLEAR_LOG() clearLog();
 
 void log(const char file[], int line, const char* format, ...);
+void clearLog();
 char* string_format(const char* format, ...);
 
 
@@ -22,8 +24,8 @@ enum update_status
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Super Awesome Engine"
-#define CAMERA_SPEED 5
-#define CAMERA_TURNING_SPEED pi
+#define CAMERA_SPEED 5 / (double) CLOCKS_PER_SEC
+#define CAMERA_TURNING_SPEED pi / (double) CLOCKS_PER_SEC
 
 // Deletes a buffer
 #define RELEASE( x ) \

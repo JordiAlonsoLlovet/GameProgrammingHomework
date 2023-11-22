@@ -8,7 +8,6 @@
 #include "ModuleProgram.h"
 #include "ModuleTexture.h"
 #include "ModuleTimer.h"
-#include "ModuleTimer.h"
 #include "ModuleRenderExercise.h"
 #include "debug_draw/ModuleDebugDraw.h"
 

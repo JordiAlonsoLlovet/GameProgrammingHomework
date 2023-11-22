@@ -4,9 +4,9 @@
 #include "ModuleWindow.h"
 #include "ModuleOpenGL.h"
 #include "imgui.h"
-#include "ModuleTimer.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
+#include <fstream>
 
 ModuleEditor::ModuleEditor() {}
 ModuleEditor::~ModuleEditor() {}
@@ -43,22 +43,43 @@ update_status ModuleEditor::PreUpdate() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
-    
+    ImGui::Begin("Configuration");
 
     return UPDATE_CONTINUE;
 }
 update_status ModuleEditor::Update() {
     static bool show = false;
+    static bool AutoScroll = true;
     if (show)
         ImGui::ShowDemoWindow(&show);
-    ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
-    ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
     ImGui::Checkbox("Demo Window", &show);
-    float dt = App->GetClock()->GetDeltaTime();
-    float fps = 1.0 / dt;
-    char* t = FORMAT("FOV: %.0f", fps);
-    ImGui::Text(t);
+    ImGui::End();
+    ImGui::SetNextWindowSize(ImVec2(1000, 300), ImGuiCond_Once);
+    ImGui::Begin("Terminal");
+
+    char* data = nullptr;
+    FILE* file = nullptr;
+    fopen_s(&file, "logs.txt", "rb");
+    if (file)
+    {
+        fseek(file, 0, SEEK_END);
+        int size = ftell(file);
+        data = (char*)malloc(size + 1);
+        fseek(file, 0, SEEK_SET);
+        fread(data, 1, size, file);
+        data[size] = 0;
+        fclose(file);
+    }
+    ImGui::BeginChild("logs", ImVec2(0, -30));
+    ImGui::TextUnformatted(data);
+    if (AutoScroll)
+        ImGui::SetScrollHereY(1.0f);
+    ImGui::EndChild();
+    ImGui::Checkbox("Auto-scroll", &AutoScroll);
+    ImGui::SameLine();
+    if (ImGui::Button("Clear", ImVec2(50, 20))) { CLEAR_LOG(); }
+        
     ImGui::End();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

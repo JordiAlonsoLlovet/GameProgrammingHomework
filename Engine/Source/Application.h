@@ -51,9 +51,7 @@ private:
     ModuleTimer* clock = nullptr;
 
     std::list<Module*> modules;
-    double ptime;
-    double deltaTime;
-
+    
 };
 
 extern Application* App;
