@@ -390,6 +390,18 @@
     <ClInclude Include="ModuleTimer.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="tinygltf\tiny_gltf.h">
+      <Filter>tinygltf</Filter>
+    </ClInclude>
+    <ClInclude Include="tinygltf\json.hpp">
+      <Filter>tinygltf</Filter>
+    </ClInclude>
+    <ClInclude Include="tinygltf\stb_image.h">
+      <Filter>tinygltf</Filter>
+    </ClInclude>
+    <ClInclude Include="tinygltf\stb_image_write.h">
+      <Filter>tinygltf</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -406,6 +418,9 @@
     </Filter>
     <Filter Include="debug_draw">
       <UniqueIdentifier>{f7de97cd-61bb-4440-952b-c7735662a376}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tinygltf">
+      <UniqueIdentifier>{17391fb7-f9c2-4111-a345-a7911fc5b828}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
