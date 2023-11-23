@@ -133,6 +133,7 @@
     <ClCompile Include="ModuleCamera.cpp" />
     <ClCompile Include="ModuleTexture.cpp" />
     <ClCompile Include="ModuleTimer.cpp" />
+    <ClCompile Include="ModuleBakerHouse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -401,6 +402,9 @@
     </ClInclude>
     <ClInclude Include="tinygltf\stb_image_write.h">
       <Filter>tinygltf</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleBakerHouse.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

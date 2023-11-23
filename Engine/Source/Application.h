@@ -16,6 +16,7 @@ class ModuleRenderExercice;
 class ModuleDebugDraw;
 class ModuleTexture;
 class ModuleTimer;
+class ModuleBakerHouse;
 
 class Application
 {
@@ -46,6 +47,7 @@ private:
     ModuleProgram* program = nullptr;
     ModuleEditor* editor = nullptr;
     ModuleRenderExercice* exercice = nullptr;
+   // ModuleBakerHouse* house = nullptr;
     ModuleDebugDraw* dd = nullptr;
     ModuleTexture* texture = nullptr;
     ModuleTimer* clock = nullptr;
