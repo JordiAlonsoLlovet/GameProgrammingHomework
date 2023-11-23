@@ -385,3 +385,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/Engine/Game/logs.txt
+/Engine/Game/imgui.ini
+/Engine/Source/x64/Debug/Engine.exe
+/Engine/Source/x64/Debug/Engine.exe.recipe
