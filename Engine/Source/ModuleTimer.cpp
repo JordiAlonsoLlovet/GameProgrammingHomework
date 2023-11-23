@@ -43,9 +43,9 @@ update_status ModuleTimer::Update() {
 
 	//double MSPerFrame = (((1000.0f * (double)ElapsedTime) / (double)frequency));
 	//double FPS = (double)frequency / (double)ElapsedTime;
-
-	if (frameCounter >= 100) {
-		long c = clock() - longTime;
+	long c = ptime - longTime;
+	if (c >= 500) {
+		
 		fps = frameCounter * CLOCKS_PER_SEC / c;
 		frameCounter = 0;
 		longTime = clock();
