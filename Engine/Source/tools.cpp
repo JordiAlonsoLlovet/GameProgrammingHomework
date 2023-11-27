@@ -1,6 +1,5 @@
 #pragma once
 #include "Globals.h"
-#include <windows.h>
 #include <fstream>
 
 char* string_format(const char* format, ...)
