@@ -8,7 +8,6 @@ class ModuleOpenGL;
 class ModuleWindow;
 class ModuleCamera;
 class ModuleEditor;
-class ModuleTextures;
 class ModuleInput;
 class ModuleRenderExercise;
 class ModuleProgram;
@@ -35,7 +34,6 @@ public:
     ModuleCamera* GetCamera() { return camera; }
     ModuleProgram* GetProgram() { return program; }
     ModuleDebugDraw* GetDD() { return dd; }
-    ModuleTexture* GetTexture() { return texture; }
     ModuleTimer* GetClock() { return clock; }
 
 private:
@@ -47,9 +45,8 @@ private:
     ModuleProgram* program = nullptr;
     ModuleEditor* editor = nullptr;
     ModuleRenderExercice* exercice = nullptr;
-   // ModuleBakerHouse* house = nullptr;
+    ModuleBakerHouse* house = nullptr;
     ModuleDebugDraw* dd = nullptr;
-    ModuleTexture* texture = nullptr;
     ModuleTimer* clock = nullptr;
 
     std::list<Module*> modules;

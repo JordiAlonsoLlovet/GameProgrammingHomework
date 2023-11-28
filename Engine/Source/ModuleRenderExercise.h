@@ -23,4 +23,5 @@ public:
 
 private:
 	unsigned program;
+	unsigned int texture;
 };

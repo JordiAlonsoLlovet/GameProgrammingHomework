@@ -1,4 +1,3 @@
-#include <GL/glew.h>
 #include "Globals.h"
 #include "ModuleRenderExercise.h"
 #include "Application.h"
@@ -6,6 +5,8 @@
 #include "ModuleTexture.h"
 #include "SDL.h"
 #include "debug_draw/debugdraw.h"
+#include "MathGeoLib.h"
+#include <GL/glew.h>
 
 
 ModuleRenderExercice::ModuleRenderExercice()
@@ -21,8 +22,8 @@ ModuleRenderExercice::~ModuleRenderExercice()
 // Called before render is available
 bool ModuleRenderExercice::Init()
 {
-	App->GetTexture()->LoadTextureFromFile(L"./Test-image-Baboon.ppm");
-	App->GetTexture()->LoadTextureGPU();
+	texture = ModuleTexture::LoadTextureFromFile(L"./Test-image-Baboon.ppm");
+	
 	char* vSource = App->GetProgram()->LoadShaderSource("../Source/VertexShaderTexture.glsl");
 	char* fSource = App->GetProgram()->LoadShaderSource("../Source/FragmentShaderTexture.glsl");
 	GLuint vertexShader = App->GetProgram()->CompileShader(GL_VERTEX_SHADER, vSource);
@@ -65,8 +66,11 @@ update_status ModuleRenderExercice::PreUpdate()
 // Called every draw update
 update_status ModuleRenderExercice::Update()
 {
-	App->GetTexture()->LoadTextureGPU();
-	App->GetProgram()->RenderVBO(vbo, program);
+	float4x4 model = float4x4::FromTRS(float3(0.0f, 0.0f, -2.0f),
+		float4x4::RotateZ(pi/4),
+		float3(1.0f, 1.0f, 1.0f));
+	//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+	App->GetProgram()->RenderVBO(vbo, program, texture, model);
 	return UPDATE_CONTINUE;
 }
 
@@ -79,6 +83,7 @@ update_status ModuleRenderExercice::PostUpdate()
 bool ModuleRenderExercice::CleanUp()
 {
 	glDeleteProgram(program);
+	glDeleteTextures(1, &texture);
 	return true;
 }
 

@@ -1,10 +1,11 @@
-#include <GL/glew.h>
 #include "Globals.h"
 #include "ModuleBakerHouse.h"
 #include "Application.h"
 #include "ModuleProgram.h"
 #include "ModuleTexture.h"
+#include "MathGeoLib.h"
 #include "SDL.h"
+#include <GL/glew.h>
 #define TINYGLTF_NO_STB_IMAGE_WRITE
 #define TINYGLTF_NO_STB_IMAGE
 #define TINYGLTF_NO_EXTERNAL_IMAGE
@@ -36,8 +37,8 @@ void ModuleBakerHouse::Load(const char* assetFileName)
 // Called before render is available
 bool ModuleBakerHouse::Init()
 {
-	App->GetTexture()->LoadTextureFromFile(L"./resources/BakerHouse/Baker_House.png");
-	App->GetTexture()->LoadTextureGPU();
+	texture = ModuleTexture::LoadTextureFromFile(L"./resources/BakerHouse/Baker_House.png");
+	//App->GetTexture()->LoadTextureGPU();
 	char* vSource = App->GetProgram()->LoadShaderSource("../Source/VertexShaderTexture.glsl");
 	char* fSource = App->GetProgram()->LoadShaderSource("../Source/FragmentShaderTexture.glsl");
 	GLuint vertexShader = App->GetProgram()->CompileShader(GL_VERTEX_SHADER, vSource);
@@ -78,8 +79,11 @@ update_status ModuleBakerHouse::PreUpdate()
 // Called every draw update
 update_status ModuleBakerHouse::Update()
 {
-	App->GetTexture()->LoadTextureGPU();
-	App->GetProgram()->RenderVBO(vbo, program);
+	float4x4 model = float4x4::FromTRS(float3(2.0f, 0.0f, 3.0f),
+		float4x4::RotateZ(0),
+		float3(1.0f, 1.0f, 1.0f));
+	//App->GetTexture()->LoadTextureGPU();
+	App->GetProgram()->RenderVBO(vbo, program,texture, model);
 	return UPDATE_CONTINUE;
 }
 

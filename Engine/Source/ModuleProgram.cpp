@@ -7,6 +7,7 @@
 #include "ModuleCamera.h"
 #include "debug_draw/ModuleDebugDraw.h"
 #include "SDL.h"
+#include <GL/glew.h>
 
 ModuleProgram::ModuleProgram() {}
 ModuleProgram::~ModuleProgram() {}
@@ -80,18 +81,20 @@ unsigned ModuleProgram::CreateProgram(unsigned vtx_shader, unsigned frg_shader)
 }
 
 // This function must be called each frame for drawing the triangle
-void ModuleProgram::RenderVBO(unsigned vbo, unsigned program)
+void ModuleProgram::RenderVBO(unsigned vbo, unsigned program, unsigned texture, float4x4& model)
 {
 	float4x4 proj = App->GetCamera()->GetProjection();
-	float4x4 model = float4x4::FromTRS(float3(0.0f, 0.0f, -2.0f),
-		float4x4::RotateZ(0),
-		float3(1.0f, 1.0f, 1.0f));
+	
 	float4x4 view = App->GetCamera()->GetView();
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &model[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &view[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &proj[0][0]);
+	
 	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
