@@ -13,13 +13,13 @@ public:
 	~ModuleRenderExercice();
 
 	bool Init();
-	update_status PreUpdate();
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
 
 public:
 	unsigned int vbo;
+	unsigned int vao;
 
 private:
 	unsigned program;

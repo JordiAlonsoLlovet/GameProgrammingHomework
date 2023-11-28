@@ -606,6 +606,13 @@ bool ModuleDebugDraw::CleanUp()
     return true;
 }
 
+update_status ModuleDebugDraw::PreUpdate()
+{
+    dd::axisTriad(float4x4::identity, 0.1f, 1.0f);
+    dd::xzSquareGrid(-10, 10, 0.0f, 1.0f, dd::colors::Gray);
+    return UPDATE_CONTINUE;
+}
+
 update_status  ModuleDebugDraw::Update()
 {
 	return UPDATE_CONTINUE;

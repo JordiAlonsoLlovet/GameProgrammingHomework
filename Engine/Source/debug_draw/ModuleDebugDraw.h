@@ -17,6 +17,7 @@ public:
     ~ModuleDebugDraw();
 
 	bool            Init();
+    update_status   PreUpdate();
 	update_status   Update();
 	bool            CleanUp();
 

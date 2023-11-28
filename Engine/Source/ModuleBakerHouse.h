@@ -17,6 +17,7 @@ public:
 
 public:
 	unsigned int vbo;
+	unsigned int vao;
 
 private:
 	unsigned program;
