@@ -13,6 +13,8 @@
 #define TINYGLTF_IMPLEMENTATION
 #include "tinygltf/tiny_gltf.h"
 
+#define BUFFER_OFFSET(i) ((char *)NULL + (i))
+
 ModuleBakerHouse::ModuleBakerHouse()
 {
 
@@ -38,20 +40,20 @@ void ModuleBakerHouse::Load(const char* assetFileName)
 // Called before render is available
 bool ModuleBakerHouse::Init()
 {
-	float4x4 modelprojection = float4x4::FromTRS(float3(2.0f, 0.0f, -3.0f),
+	float4x4 modelprojection = float4x4::FromTRS(float3(0.0f, 0.0f, 0.0f),
 		float4x4::RotateZ(0),
 		float3(1.0f, 1.0f, 1.0f));
 	texture = ModuleTexture::LoadTextureFromFile(L"./resources/BakerHouse/Baker_House.png");
 	//App->GetTexture()->LoadTextureGPU();
 	char* vSource = App->GetProgram()->LoadShaderSource("../Source/VertexShaderTexture.glsl");
-	char* fSource = App->GetProgram()->LoadShaderSource("../Source/FragmentShaderTexture.glsl");
+	char* fSource = App->GetProgram()->LoadShaderSource("../Source/FragmentShader.glsl");
 	GLuint vertexShader = App->GetProgram()->CompileShader(GL_VERTEX_SHADER, vSource);
 	GLuint fragmentShader = App->GetProgram()->CompileShader(GL_FRAGMENT_SHADER, fSource);
 	program = App->GetProgram()->CreateProgram(vertexShader, fragmentShader);
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &modelprojection[0][0]);
 	tinygltf::TinyGLTF gltfContext;
-	tinygltf::Model model;
+	static tinygltf::Model model;
 	std::string error, warning;
 	bool loadOk = gltfContext.LoadASCIIFromFile(&model, &error, &warning, "./resources/BakerHouse/BakerHouse.gltf");
 	if (!loadOk)
@@ -65,6 +67,7 @@ bool ModuleBakerHouse::Init()
 			const auto& itPos = primitive.attributes.find("POSITION");
 			if (itPos != primitive.attributes.end())
 			{
+				indexAccessor = &(model.accessors[primitive.indices]);
 				const tinygltf::Accessor& posAcc = model.accessors[itPos->second];
 				SDL_assert(posAcc.type == TINYGLTF_TYPE_VEC3);
 				SDL_assert(posAcc.componentType == GL_FLOAT);
@@ -75,14 +78,14 @@ bool ModuleBakerHouse::Init()
 				glGenBuffers(1, &vbo);
 				glBindVertexArray(vao);
 				glBindBuffer(GL_ARRAY_BUFFER, vbo);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * posAcc.count, nullptr, GL_STATIC_DRAW);
-				float3* ptr = reinterpret_cast<float3*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * posAcc.count, bufferPos, GL_STATIC_DRAW);
+				/*float3* ptr = reinterpret_cast<float3*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 				for (size_t i = 0; i < posAcc.count; ++i)
 				{
 					ptr[i] = *reinterpret_cast<const float3*>(bufferPos);
 					bufferPos += posView.byteStride;
 				}
-				glUnmapBuffer(GL_ARRAY_BUFFER);
+				glUnmapBuffer(GL_ARRAY_BUFFER);*/
 
 				glEnableVertexAttribArray(0);
 				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3 + sizeof(float) * 2, (void*)0);
@@ -120,8 +123,7 @@ update_status ModuleBakerHouse::Update()
 
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-	glDrawElements(GL_TRIANGLES, 16, GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, indexAccessor->count, GL_UNSIGNED_INT, BUFFER_OFFSET(indexAccessor->byteOffset));
 
 	glBindVertexArray(0);
 	glUseProgram(0);

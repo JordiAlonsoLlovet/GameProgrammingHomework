@@ -2,6 +2,10 @@
 #include "Module.h"
 #include "Globals.h"
 
+namespace tinygltf {
+	class Accessor;
+}
+
 class ModuleBakerHouse : public Module
 {
 public:
@@ -22,4 +26,5 @@ public:
 private:
 	unsigned program;
 	unsigned texture;
+	tinygltf::Accessor* indexAccessor;
 };
