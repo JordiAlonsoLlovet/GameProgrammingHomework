@@ -1,5 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
+#include "SDL/include/SDL.h"
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
 #include "ModuleOpenGL.h"
@@ -48,6 +49,8 @@ update_status ModuleEditor::PreUpdate() {
     return UPDATE_CONTINUE;
 }
 update_status ModuleEditor::Update() {
+    SDL_DisplayMode DM;
+    SDL_GetDesktopDisplayMode(0, &DM);
     static bool show = false;
     static bool AutoScroll = true;
     if (show)
@@ -55,9 +58,11 @@ update_status ModuleEditor::Update() {
 
     ImGui::Checkbox("Demo Window", &show);
     ImGui::End();
-    ImGui::SetNextWindowSize(ImVec2(1000, 300), ImGuiCond_Once);
+    //TERMINAL
+    ImGui::SetNextWindowSize(ImVec2(900, 250), ImGuiCond_Once);
+    ImGui::SetNextWindowPos(ImVec2(DM.w/2 - 450, DM.h-300), ImGuiCond_Once);
     ImGui::Begin("Terminal");
-
+    ImVec2 tSize = ImGui::GetWindowSize();
     char* data = nullptr;
     FILE* file = nullptr;
     fopen_s(&file, "logs.txt", "rb");
