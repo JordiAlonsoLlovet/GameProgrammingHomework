@@ -1,10 +1,14 @@
 #pragma once
+#include<vector>
 #include "Module.h"
 #include "Globals.h"
 
 namespace tinygltf {
 	class Accessor;
+	class Model;
 }
+
+class Mesh;
 
 class ModuleBakerHouse : public Module
 {
@@ -16,15 +20,12 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	update_status PostUpdate();
+	void LoadMaterials(const tinygltf::Model& srcModel);
 	bool CleanUp();
 	void Load(const char* assetFile);
 
-public:
-	unsigned int vbo;
-	unsigned int vao;
-
 private:
 	unsigned program;
-	unsigned texture;
-	tinygltf::Accessor* indexAccessor;
+	std::vector<Mesh*> meshes;
+	std::vector<unsigned> textures;
 };

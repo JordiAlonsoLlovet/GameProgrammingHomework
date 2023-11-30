@@ -1,5 +1,9 @@
 #include "../Globals.h"
 #include "ModuleDebugDraw.h"
+#include "../Application.h"
+#include "../ModuleCamera.h"
+#include "../ModuleWindow.h"
+#include "SDL.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
@@ -615,6 +619,12 @@ update_status ModuleDebugDraw::PreUpdate()
 
 update_status  ModuleDebugDraw::Update()
 {
+    float4x4 proj = App->GetCamera()->GetProjection();
+    float4x4 view = App->GetCamera()->GetView();
+    //draw Debug Grid
+    int w; int h;
+    SDL_GetWindowSize(App->GetWindow()->window, &w, &h);
+    Draw(view, proj, w, h);
 	return UPDATE_CONTINUE;
 }
 

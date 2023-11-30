@@ -152,6 +152,7 @@
     <ClCompile Include="imgui-docking\imgui_draw.cpp" />
     <ClCompile Include="imgui-docking\imgui_tables.cpp" />
     <ClCompile Include="imgui-docking\imgui_widgets.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ModuleBakerHouse.cpp" />
     <ClCompile Include="ModuleTimer.cpp" />
     <ClCompile Include="tools.cpp" />
@@ -199,6 +200,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="ModuleBakerHouse.h" />
     <ClInclude Include="debug_draw\debugdraw.h" />
     <ClInclude Include="debug_draw\debug_draw.hpp" />

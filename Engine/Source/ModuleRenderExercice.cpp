@@ -5,7 +5,6 @@
 #include "ModuleTexture.h"
 #include "ModuleCamera.h"
 #include "ModuleWindow.h"
-#include "debug_draw/ModuleDebugDraw.h"
 #include "SDL.h"
 #include "MathGeoLib.h"
 #include <GL/glew.h>
@@ -92,11 +91,6 @@ update_status ModuleRenderExercice::Update()
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	glBindVertexArray(0);
 	glUseProgram(0);
-
-	//draw Debug Grid
-	int w; int h;
-	SDL_GetWindowSize(App->GetWindow()->window, &w, &h);
-	App->GetDD()->Draw(view, proj, w, h);
 	
 	return UPDATE_CONTINUE;
 }

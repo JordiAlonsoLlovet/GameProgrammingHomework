@@ -134,6 +134,7 @@
     <ClCompile Include="ModuleTexture.cpp" />
     <ClCompile Include="ModuleTimer.cpp" />
     <ClCompile Include="ModuleBakerHouse.cpp" />
+    <ClCompile Include="Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -406,6 +407,9 @@
     <ClInclude Include="ModuleBakerHouse.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -453,7 +457,11 @@
       <Filter>MathGeolib</Filter>
     </None>
     <None Include="packages.config" />
-    <None Include="FragmentShaderTexture.glsl" />
-    <None Include="VertexShaderTexture.glsl" />
+    <None Include="FragmentShaderTexture.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="VertexShaderTexture.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
