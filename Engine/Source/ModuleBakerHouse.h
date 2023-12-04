@@ -20,9 +20,9 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	update_status PostUpdate();
-	void LoadMaterials(const tinygltf::Model& srcModel);
+	void LoadMaterials(const tinygltf::Model& srcModel, const char* dir);
 	bool CleanUp();
-	void Load(const char* assetFile);
+	void Load(const char* dir, const char* assetFileName);
 
 private:
 	unsigned program;

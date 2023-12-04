@@ -25,7 +25,7 @@ enum update_status
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Super Awesome Engine"
-#define CAMERA_SPEED 5 / (double) CLOCKS_PER_SEC
+#define CAMERA_SPEED 5
 #define CAMERA_TURNING_SPEED pi / (double) CLOCKS_PER_SEC
 
 // Deletes a buffer

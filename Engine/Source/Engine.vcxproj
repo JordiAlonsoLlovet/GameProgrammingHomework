@@ -292,8 +292,10 @@
     <ClInclude Include="tinygltf\tiny_gltf.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FragmentShader.glsl" />
-    <None Include="FragmentShaderTexture.glsl" />
+    <None Include="..\Game\shaders\FragmentShader.glsl" />
+    <None Include="..\Game\shaders\FragmentShaderTexture.glsl" />
+    <None Include="..\Game\shaders\VertexShader.glsl" />
+    <None Include="..\Game\shaders\VertexShaderTexture.glsl" />
     <None Include="MathGeoLib\include\Geometry\KDTree.inl" />
     <None Include="MathGeoLib\include\Geometry\QuadTree.inl" />
     <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl" />
@@ -301,8 +303,6 @@
     <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_SSE.inl" />
     <None Include="MathGeoLib\include\Math\Matrix.inl" />
     <None Include="packages.config" />
-    <None Include="VertexShader.glsl" />
-    <None Include="VertexShaderTexture.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -432,12 +432,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="VertexShader.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="FragmentShader.glsl">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="MathGeoLib\include\Math\Matrix.inl">
       <Filter>MathGeolib</Filter>
     </None>
@@ -457,10 +451,16 @@
       <Filter>MathGeolib</Filter>
     </None>
     <None Include="packages.config" />
-    <None Include="FragmentShaderTexture.glsl">
+    <None Include="..\Game\shaders\FragmentShader.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="VertexShaderTexture.glsl">
+    <None Include="..\Game\shaders\FragmentShaderTexture.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Game\shaders\VertexShader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Game\shaders\VertexShaderTexture.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

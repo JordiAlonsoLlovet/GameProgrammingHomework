@@ -106,9 +106,8 @@ void Mesh::Render(unsigned program, const std::vector<unsigned>& textures) const
 {
 	glUseProgram(program);
 
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, textures[materialIndex]);
-	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
 
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, BUFFER_OFFSET(byteOffset));

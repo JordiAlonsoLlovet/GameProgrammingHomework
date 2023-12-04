@@ -27,11 +27,11 @@ bool ModuleCamera::Init() {
 
 update_status ModuleCamera::Update() {
 	static float cameraSpeed = CAMERA_SPEED;
-	static float f = math::pi / 2.0f;
+	static float f = 90;
 	ImGui::SliderFloat("Movement speed", &cameraSpeed, 0.0f, CAMERA_SPEED*10);
-	if (ImGui::SliderFloat("FOV", &f, 0, pi))
-		SetFOV(f);
-	float deltaMove = App->GetClock()->GetDeltaTime() * cameraSpeed;
+	if (ImGui::SliderFloat("FOV", &f, 0, 180))
+		SetFOV(pi * f / 180);
+	float deltaMove = App->GetClock()->GetDeltaTime() * cameraSpeed / (double)CLOCKS_PER_SEC;
 	float deltaTurn = App->GetClock()->GetDeltaTime() * CAMERA_TURNING_SPEED;
 	if (App->GetInput()->KeyPress(SDL_SCANCODE_LSHIFT))
 		deltaMove *= 2;
