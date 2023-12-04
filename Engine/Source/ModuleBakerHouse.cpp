@@ -67,7 +67,7 @@ bool ModuleBakerHouse::Init()
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &modelprojection[0][0]);
 
 	//Load Model
-	Load("./resources/BoxTextured/BoxTextured.gltf");
+	Load("./resources/BakerHouse/BakerHouse.gltf");
 
 	return true;
 }
@@ -117,7 +117,7 @@ void ModuleBakerHouse::LoadMaterials(const tinygltf::Model& srcModel)
 			const tinygltf::Texture& texture = srcModel.textures[srcMaterial.pbrMetallicRoughness.baseColorTexture.index];
 			const tinygltf::Image& image = srcModel.images[texture.source];
 			std::wstring widestr = std::wstring(image.uri.begin(), image.uri.end());
-			widestr.insert(0, L"./resources/BoxTextured/");
+			widestr.insert(0, L"./resources/BakerHouse/");
 			textureId = (ModuleTexture::LoadTextureFromFile(widestr.c_str()));
 		}
 		textures.push_back(textureId);
