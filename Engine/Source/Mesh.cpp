@@ -35,17 +35,17 @@ void Mesh::Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const 
 		glBufferData(GL_ARRAY_BUFFER, sizeOfData, nullptr, GL_STATIC_DRAW);
 		int a = sizeof(float);
 		int b = sizeof(char);
-		char* ptr = reinterpret_cast<char*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+		float* ptr = reinterpret_cast<float*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 
 		//memcpy(&ptr[0], bufferPos, 12* posAcc.count);
 		//memcpy(&ptr[12 * posAcc.count], bufferTex, texView.byteStride * texAcc.count);
-		for (size_t i = 0; i < posAcc.count * 12; i+= 12)
+		for (size_t i = 0; i < posAcc.count * 3; i+= 3)
 		{
 			//ptr[i] = *reinterpret_cast<const float3*>(bufferPos);
 			memcpy(&ptr[i], bufferPos, 12);
 			bufferPos += 12;
 		}
-		for (size_t i = posAcc.count * 12; i < sizeOfData; i+= 8)
+		for (size_t i = posAcc.count * 3; i < sizeOfData; i+= 2)
 		{
 			//ptr[i] = *reinterpret_cast<const float3*>(bufferTex);
 			memcpy(&ptr[i], bufferTex, 8);

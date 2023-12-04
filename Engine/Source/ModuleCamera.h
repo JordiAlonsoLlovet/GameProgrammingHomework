@@ -17,7 +17,8 @@ public:
 	float4x4 GetProjection();
 	bool SetFOV(float fov);
 	bool SetAspectRatio(float aspect);
-	bool LookAt(float x, float y, float z);
+	void LookAt(float x, float y, float z);
+	void LookAt(float3 target);
 	float3 MoveCamera(float3 movement);
 	void RotateH(double alpha);
 	void RotateV(double alpha);

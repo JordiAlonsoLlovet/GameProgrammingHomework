@@ -57,8 +57,6 @@ update_status ModuleCamera::Update() {
 		RotateV(deltaTurn);
 	if (App->GetInput()->KeyPress(SDL_SCANCODE_DOWN))
 		RotateV(-deltaTurn);
-
-		
 	
 	camera.pos += m;
     return UPDATE_CONTINUE;
@@ -92,13 +90,10 @@ bool ModuleCamera::SetFOV(float fov)
 	return 1;
 }
 
-bool ModuleCamera::LookAt(float x, float y, float z)
+void ModuleCamera::LookAt(float x, float y, float z)
 {
 	float3 target = float3(x, y, z);
-	float3 direction = (target - camera.pos);
-	direction.Normalize();
-	camera.front = direction;
-	return 1;
+	LookAt(target);
 }
 
 float3 ModuleCamera::MoveCamera(float3 movement)
@@ -129,4 +124,12 @@ void ModuleCamera::Rotate(double alpha, float3 axis)
 	float3x3 r = float3x3::identity * cos(alpha) + cpMatrix * sin(alpha) + axis.OuterProduct(axis) * (1 - cos(alpha));
 	camera.front = r * camera.front;
 	camera.up = r * camera.up;
+}
+
+void ModuleCamera::LookAt(float3 target)
+{
+	camera.pos = target - 3 * float3::unitZ;
+
+	camera.front = float3::unitZ;
+	camera.up = float3::unitY;
 }

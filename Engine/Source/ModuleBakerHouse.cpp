@@ -4,6 +4,7 @@
 #include "ModuleCamera.h"
 #include "ModuleProgram.h"
 #include "ModuleTexture.h"
+#include "ModuleInput.h"
 #include "MathGeoLib.h"
 #include "SDL.h"
 #include <GL/glew.h>
@@ -85,6 +86,9 @@ update_status ModuleBakerHouse::Update()
 	static float rotateX = 0.0f;
 	static float rotateY = 0.0f;
 	static float rotateZ = 0.0f;
+
+	if (App->GetInput()->KeyPress(SDL_SCANCODE_F))
+		App->GetCamera()->LookAt(0.0f, 0.0f, 0.0f);
 
 	/*********** ImGUI ************/
 	ImGui::Begin("Model Configuration");
