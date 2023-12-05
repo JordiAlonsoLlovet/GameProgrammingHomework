@@ -6,59 +6,54 @@
 #include "tinygltf/tiny_gltf.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
+#define NUM_ATTRIBUTES 2
 
 void Mesh::Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive)
 {
 	materialIndex = primitive.material;
+	unsigned int indAcc = 0;
+	const tinygltf::Accessor* accessors[NUM_ATTRIBUTES];
+
 	const auto& itPos = primitive.attributes.find("POSITION");
 	const auto& itTex = primitive.attributes.find("TEXCOORD_0");
-	if (itPos != primitive.attributes.end())
-	{
-		const tinygltf::Accessor& posAcc = model.accessors[itPos->second];
-		const tinygltf::Accessor& texAcc = model.accessors[itTex->second];
-		SDL_assert(posAcc.type == TINYGLTF_TYPE_VEC3);
-		SDL_assert(posAcc.componentType == GL_FLOAT);
-		SDL_assert(texAcc.type == TINYGLTF_TYPE_VEC2);
-		SDL_assert(texAcc.componentType == GL_FLOAT);
-		const tinygltf::BufferView& posView = model.bufferViews[posAcc.bufferView];
-		const tinygltf::Buffer& posBuffer = model.buffers[posView.buffer];
-		const unsigned char* bufferPos = &(posBuffer.data[posAcc.byteOffset + posView.byteOffset]);
-
-		const tinygltf::BufferView& texView = model.bufferViews[texAcc.bufferView];
-		const tinygltf::Buffer& texBuffer = model.buffers[texView.buffer];
-		const unsigned char* bufferTex = &(texBuffer.data[texAcc.byteOffset + texView.byteOffset]);
-
-		vertexCount = posAcc.count;
-		glGenBuffers(1, &vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		int sizeOfData = sizeof(float) * (3 * posAcc.count + 2 * texAcc.count);
-		glBufferData(GL_ARRAY_BUFFER, sizeOfData, nullptr, GL_STATIC_DRAW);
-		int a = sizeof(float);
-		int b = sizeof(char);
-		float* ptr = reinterpret_cast<float*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
-
-		//memcpy(&ptr[0], bufferPos, 12* posAcc.count);
-		//memcpy(&ptr[12 * posAcc.count], bufferTex, texView.byteStride * texAcc.count);
-		for (size_t i = 0; i < posAcc.count * 3; i+= 3)
-		{
-			//ptr[i] = *reinterpret_cast<const float3*>(bufferPos);
-			memcpy(&ptr[i], bufferPos, 12);
-			bufferPos += 12;
-		}
-		for (size_t i = posAcc.count * 3; i < sizeOfData; i+= 2)
-		{
-			//ptr[i] = *reinterpret_cast<const float3*>(bufferTex);
-			memcpy(&ptr[i], bufferTex, 8);
-			bufferTex += 8;
-		}
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-	
+	if (itPos != primitive.attributes.end()) {
+		accessors[indAcc++] = &model.accessors[itPos->second];
+		vertexCount = accessors[0]->count;
 	}
+	if (itTex != primitive.attributes.end())
+		accessors[indAcc++] = &model.accessors[itTex->second];
+
+	unsigned int sizeOfData = 0;
+	for (unsigned int i = 0; i < indAcc; ++i)
+		sizeOfData += SizeFromGlType(accessors[i]->componentType) * AttributNumElements(accessors[i]->type) * accessors[i]->count;
+
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeOfData, nullptr, GL_STATIC_DRAW);
+	char* ptr = (char*)(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+	unsigned int ptrIndex = 0;
+	for (unsigned int i = 0; i < indAcc; ++i) {
+		const tinygltf::BufferView* bufferView = &model.bufferViews[accessors[i]->bufferView];
+		const tinygltf::Buffer* buffer = &model.buffers[bufferView->buffer];
+		const unsigned char* buff = &(buffer->data[accessors[i]->byteOffset + bufferView->byteOffset]);
+		unsigned int attributeSize = SizeFromGlType(accessors[i]->componentType) * AttributNumElements(accessors[i]->type);
+		for (unsigned int j = 0; j < accessors[i]->count; ++j) {
+			//float3 test = *reinterpret_cast<const float3*>(buffers[i]);
+			memcpy(&ptr[ptrIndex], buff, attributeSize);
+			buff += attributeSize;
+			ptrIndex += attributeSize;
+		}		
+	}
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+	LoadEBO(model, mesh, primitive);
+
+	///Create VAO
+	CreateVAO(*accessors, indAcc);
 }
 
 void Mesh::LoadEBO(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive)
 {
-	if (primitive.indices >= 0)
+	if (hasEBO = primitive.indices >= 0)
 	{
 		const tinygltf::Accessor& indAcc = model.accessors[primitive.indices];
 		const tinygltf::BufferView& indView = model.bufferViews[indAcc.bufferView];
@@ -89,27 +84,81 @@ void Mesh::LoadEBO(const tinygltf::Model& model, const tinygltf::Mesh& mesh, con
 	}
 }
 
-void Mesh::CreateVAO()
+void Mesh::CreateVAO(const tinygltf::Accessor* accessors, const unsigned int numAttr)
 {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * vertexCount));
+	if (hasEBO) glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	unsigned int offset = 0;
+	for (unsigned int a = 0; a < numAttr; ++a) {
+		glEnableVertexAttribArray(a);
+		glVertexAttribPointer(a, AttributNumElements(accessors[a].type), accessors[a].componentType, GL_FALSE, 0, (void*)offset);
+		offset += accessors[a].count * AttributNumElements(accessors[a].type) * SizeFromGlType(accessors[a].componentType);
+	}
 	glBindVertexArray(0);
 }
 
 void Mesh::Render(unsigned program, const std::vector<unsigned>& textures) const
 {
 	glUseProgram(program);
-
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, textures[materialIndex]);
-
+	if (materialIndex >= 0) {
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, textures[materialIndex]);
+	}
 	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, BUFFER_OFFSET(byteOffset));
+	if (hasEBO) glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, BUFFER_OFFSET(byteOffset));
+	else glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 }
 
+unsigned int Mesh::SizeFromGlType(int glDefineType)
+{
+	switch (glDefineType)
+	{
+	case GL_BYTE:
+	case GL_UNSIGNED_BYTE:
+		return 1;
+	case GL_SHORT:
+	case GL_UNSIGNED_SHORT:
+	case GL_2_BYTES:
+		return 2;
+	case GL_3_BYTES:
+		return 3;
+	case GL_INT:
+	case GL_UNSIGNED_INT:
+	case GL_FLOAT:
+	case GL_4_BYTES:
+		return 4;
+	case GL_DOUBLE:
+		return 8;
+	default:
+		LOG("WARNING: Could not identify GLTypeDefine");
+	}
+	return 0;
+}
+
+unsigned int Mesh::AttributNumElements(int tinyDefineType)
+{
+	switch (tinyDefineType)
+	{
+	case TINYGLTF_TYPE_SCALAR:
+		return 1;
+	case TINYGLTF_TYPE_VEC2:
+		return 2;
+	case TINYGLTF_TYPE_VEC3:
+		return 3;
+	case TINYGLTF_TYPE_VEC4:
+	case TINYGLTF_TYPE_MAT2:
+		return 4;
+	case TINYGLTF_TYPE_MAT3:
+		return 9;
+	case TINYGLTF_TYPE_MAT4:
+		return 16;
+	default:
+		//case TINYGLTF_TYPE_VECTOR
+		//case TINYGLTF_TYPE_MATRIX
+		LOG("WARNING: Could not identify TinyGtfTypeDefine");
+		assert(false && "WARNING: Could not identify TinyGtfTypeDefine");
+	}
+	return 0;
+}

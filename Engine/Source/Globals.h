@@ -4,12 +4,11 @@
 #include <stdio.h>
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
-#define FORMAT(format, ...) string_format(format, __VA_ARGS__);
 #define CLEAR_LOG() clearLog();
 
 void log(const char file[], int line, const char* format, ...);
 void clearLog();
-char* string_format(const char* format, ...);
+const char* string_format(const char* format, ...);
 
 
 enum update_status

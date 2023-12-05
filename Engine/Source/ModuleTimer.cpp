@@ -50,8 +50,9 @@ update_status ModuleTimer::Update() {
 		frameCounter = 0;
 		longTime = clock();
 	}
-	char* t = FORMAT("FPS: %.0f", fps);
+	const char* t = string_format("FPS: %.0f", fps);
 	ImGui::Text(t);
+	free((void*)t);
 	return UPDATE_CONTINUE;
 }
 

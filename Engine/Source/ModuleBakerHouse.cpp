@@ -8,6 +8,7 @@
 #include "MathGeoLib.h"
 #include "SDL.h"
 #include <GL/glew.h>
+#include <format>
 #include "imgui.h"
 #include "Mesh.h"
 #define TINYGLTF_NO_STB_IMAGE_WRITE
@@ -46,8 +47,6 @@ void ModuleBakerHouse::Load(const char* dir, const char* assetFileName)
 		{
 			Mesh* mesh = new Mesh;
 			mesh->Load(model, srcMesh, primitive);
-			mesh->LoadEBO(model, srcMesh, primitive);
-			mesh->CreateVAO();
 			meshes.push_back(mesh);
 		}
 	}
@@ -57,18 +56,23 @@ void ModuleBakerHouse::Load(const char* dir, const char* assetFileName)
 // Called before render is available
 bool ModuleBakerHouse::Init()
 {
-	
-	//texture = ModuleTexture::LoadTextureFromFile(L"./resources/BakerHouse/Baker_House.png");
-	//App->GetTexture()->LoadTextureGPU();
+	//Load Model
+	const char* assetName = "TriangleWithoutIndices";
+	const char* assetDir = string_format("./resources/%s/", assetName);
+	const char* fileName = string_format("%s.gltf", assetName);
+
+	Load(assetDir, fileName);
+	free((void*)assetDir);
+	free((void*)fileName);
+
+	//Create Program
 	char* vSource = App->GetProgram()->LoadShaderSource("./shaders/VertexShaderTexture.glsl");
 	char* fSource = App->GetProgram()->LoadShaderSource("./shaders/FragmentShaderTexture.glsl");
 	GLuint vertexShader = App->GetProgram()->CompileShader(GL_VERTEX_SHADER, vSource);
 	GLuint fragmentShader = App->GetProgram()->CompileShader(GL_FRAGMENT_SHADER, fSource);
 	program = App->GetProgram()->CreateProgram(vertexShader, fragmentShader);
 
-	//Load Model
-	Load("./resources/Duck/", "Duck.gltf");
-
+	
 	return true;
 }
 
@@ -92,7 +96,7 @@ update_status ModuleBakerHouse::Update()
 
 	/*********** ImGUI ************/
 	ImGui::Begin("Model Configuration");
-	ImGui::DragFloat("Scale", &scale, 0.005f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_Logarithmic);
+	ImGui::SliderFloat("Scale", &scale, 0.0f, 100.0f, "%.3f", ImGuiSliderFlags_Logarithmic);
 	ImGui::SliderFloat("RotateX", &rotateX, 0, 360);
 	ImGui::SliderFloat("RotateY", &rotateY, 0, 360);
 	ImGui::SliderFloat("RotateZ", &rotateZ, 0, 360);

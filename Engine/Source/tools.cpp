@@ -2,9 +2,9 @@
 #include "Globals.h"
 #include <fstream>
 
-char* string_format(const char* format, ...)
+const char* string_format(const char* format, ...)
 {
-	static char tmp_string[4096];
+	char* tmp_string = (char*) malloc(4096 * sizeof(char));
 	static va_list  ap;
 
 	// Construct the string from variable arguments
@@ -12,6 +12,7 @@ char* string_format(const char* format, ...)
 	vsprintf_s(tmp_string, 4096, format, ap);
 	va_end(ap);
 	return tmp_string;
+
 }
 
 void log(const char file[], int line, const char* format, ...)
