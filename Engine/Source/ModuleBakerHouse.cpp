@@ -57,7 +57,7 @@ void ModuleBakerHouse::Load(const char* dir, const char* assetFileName)
 bool ModuleBakerHouse::Init()
 {
 	//Load Model
-	const char* assetName = "TriangleWithoutIndices";
+	const char* assetName = "BakerHouse";
 	const char* assetDir = string_format("./resources/%s/", assetName);
 	const char* fileName = string_format("%s.gltf", assetName);
 

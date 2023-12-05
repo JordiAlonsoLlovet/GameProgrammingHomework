@@ -103,7 +103,7 @@ void Mesh::Render(unsigned program, const std::vector<unsigned>& textures) const
 {
 	glUseProgram(program);
 	if (materialIndex >= 0) {
-		glActiveTexture(GL_TEXTURE1);
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures[materialIndex]);
 	}
 	glBindVertexArray(vao);

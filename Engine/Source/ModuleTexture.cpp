@@ -52,6 +52,7 @@ unsigned ModuleTexture::LoadTextureFromFile(const wchar_t* tex_filename) //, ID3
             assert(false && "Unsupported format");
     }
     
+    glBindTexture(GL_TEXTURE_2D, textures);
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, imageMetadata.width, imageMetadata.height, 0, format, type, image->GetPixels());
     if (imageMetadata.mipLevels <= 1) glGenerateMipmap(GL_TEXTURE_2D);
 
