@@ -23,6 +23,7 @@ public:
 	void LoadMaterials(const tinygltf::Model& srcModel, const char* dir);
 	bool CleanUp();
 	void Load(const char* dir, const char* assetFileName);
+	void ChangeModel(const char* fileDir);
 
 private:
 	unsigned program;

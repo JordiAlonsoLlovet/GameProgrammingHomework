@@ -31,8 +31,8 @@ ModuleBakerHouse::~ModuleBakerHouse()
 
 void ModuleBakerHouse::Load(const char* dir, const char* assetFileName)
 {
-	tinygltf::TinyGLTF gltfContext;
-	static tinygltf::Model model;
+	static tinygltf::TinyGLTF gltfContext;
+	tinygltf::Model model;
 	std::string error, warning;
 	std::string sDir = dir;
 	std::string sAsset = assetFileName;
@@ -91,7 +91,8 @@ update_status ModuleBakerHouse::Update()
 	static float rotateY = 0.0f;
 	static float rotateZ = 0.0f;
 
-	if (App->GetInput()->KeyPress(SDL_SCANCODE_F))
+	int test = App->GetInput()->GetKey(SDL_SCANCODE_F);
+	if (test == KEY_DOWN)
 		App->GetCamera()->LookAt(0.0f, 0.0f, 0.0f);
 
 	/*********** ImGUI ************/
@@ -148,6 +149,23 @@ bool ModuleBakerHouse::CleanUp()
 {
 	glDeleteProgram(program);
 	return true;
+}
+
+void ModuleBakerHouse::ChangeModel(const char* fileDir) {
+	std::string s = fileDir;
+	size_t dotPos = s.find_last_of('.');
+	std::replace(s.begin(), s.end(), '\\', '/');
+	size_t pos = s.find_last_of('/');
+
+	if (pos != std::string::npos && s.substr(dotPos) == ".gltf") {
+		std::string directory = s.substr(0, pos +1).c_str();
+		std::string fileName = s.substr(pos + 1).c_str();
+		meshes.clear();
+		textures.clear();
+		Load(directory.c_str(), fileName.c_str());
+	}
+	else
+		LOG("Archivo no valido para importación.");
 }
 
 

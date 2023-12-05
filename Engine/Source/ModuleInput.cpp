@@ -4,6 +4,7 @@
 #include "ModuleWindow.h"
 #include "ModuleOpenGL.h"
 #include "ModuleCamera.h"
+#include "ModuleBakerHouse.h"
 #include "SDL.h"
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
@@ -34,6 +35,7 @@ bool ModuleInput::Init()
 		LOG("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
+	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 
 	return ret;
 }
@@ -48,7 +50,7 @@ update_status ModuleInput::Update()
         ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
         if (SDL_GetWindowID(App->GetWindow()->window) == sdlEvent.window.windowID) {
             switch (sdlEvent.type)
-            {
+            {				
                 case SDL_QUIT:
                     return UPDATE_STOP;
                 case SDL_WINDOWEVENT:
@@ -61,41 +63,49 @@ update_status ModuleInput::Update()
                         return UPDATE_STOP;
                                 
                     break;
+									
             }
 
 			//mouse_motion = { 0, 0 };
 	//memset(windowEvents, false, WE_COUNT * sizeof(bool));
 
-			const Uint8* keys = SDL_GetKeyboardState(NULL);
-			for (int i = 0; i < MAX_KEYS; ++i)
-			{
-				if (keys[i] == 1)
-				{
-					if (keyboard[i] == KEY_IDLE) 
-						keyboard[i] = KEY_DOWN;
-						
-					else
-						keyboard[i] = KEY_REPEAT;
-				}
-				else
-				{
-					if (keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
-						keyboard[i] = KEY_UP;
-					else
-						keyboard[i] = KEY_IDLE;
-				}
-	
-			}
-			for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
-			{
-				if (mouse_buttons[i] == KEY_DOWN)
-					mouse_buttons[i] = KEY_REPEAT;
-
-				if (mouse_buttons[i] == KEY_UP)
-					mouse_buttons[i] = KEY_IDLE;
-			}
         }
+		else
+			switch (sdlEvent.type)
+			{
+				case SDL_DROPFILE:
+					App->GetExercice()->ChangeModel(sdlEvent.drop.file);
+			}
     }
+
+	const Uint8* keys = SDL_GetKeyboardState(NULL);
+	for (int i = 0; i < MAX_KEYS; ++i)
+	{
+		if (keys[i] == 1)
+		{
+			if (keyboard[i] == KEY_IDLE)
+				keyboard[i] = KEY_DOWN;
+
+			else
+				keyboard[i] = KEY_REPEAT;
+		}
+		else
+		{
+			if (keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
+				keyboard[i] = KEY_UP;
+			else
+				keyboard[i] = KEY_IDLE;
+		}
+
+	}
+	for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
+	{
+		if (mouse_buttons[i] == KEY_DOWN)
+			mouse_buttons[i] = KEY_REPEAT;
+
+		if (mouse_buttons[i] == KEY_UP)
+			mouse_buttons[i] = KEY_IDLE;
+	}
 
     return UPDATE_CONTINUE;
 }

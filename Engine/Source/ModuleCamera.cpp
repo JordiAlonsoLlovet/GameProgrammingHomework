@@ -32,8 +32,8 @@ update_status ModuleCamera::Update() {
 	if (ImGui::SliderFloat("FOV", &f, 0, 180))
 		SetFOV(pi * f / 180);
 	float deltaMove = App->GetClock()->GetDeltaTime() * cameraSpeed / (double)CLOCKS_PER_SEC;
-	float deltaTurn = App->GetClock()->GetDeltaTime() * CAMERA_TURNING_SPEED;
-	if (App->GetInput()->KeyPress(SDL_SCANCODE_LSHIFT))
+	float deltaTurn = App->GetClock()->GetDeltaTime() * CAMERA_TURNING_SPEED / (double)CLOCKS_PER_SEC;
+	if (App->GetInput()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 		deltaMove *= 2;
 	float3 m = float3(0.0f, 0.0f, 0.0f);
 	if (App->GetInput()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
@@ -49,13 +49,13 @@ update_status ModuleCamera::Update() {
 	if (App->GetInput()->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
 		m.y -= deltaMove;
 
-	if (App->GetInput()->KeyPress(SDL_SCANCODE_RIGHT))
+	if (App->GetInput()->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		RotateH(-deltaTurn);
-	if (App->GetInput()->KeyPress(SDL_SCANCODE_LEFT))
+	if (App->GetInput()->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 		RotateH(deltaTurn);
-	if (App->GetInput()->KeyPress(SDL_SCANCODE_UP))
+	if (App->GetInput()->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		RotateV(deltaTurn);
-	if (App->GetInput()->KeyPress(SDL_SCANCODE_DOWN))
+	if (App->GetInput()->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 		RotateV(-deltaTurn);
 	
 	camera.pos += m;
