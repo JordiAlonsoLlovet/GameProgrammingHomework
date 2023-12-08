@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleTimer.h"
+#include "ModuleBakerHouse.h"
 #include "SDL.h"
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
@@ -34,38 +35,48 @@ update_status ModuleCamera::Update() {
 	float delta = App->GetClock()->GetDeltaTime() / (double)CLOCKS_PER_SEC;
 	float deltaMove = delta * cameraSpeed;
 	float deltaTurn = delta * CAMERA_TURNING_SPEED;
-	if (App->GetInput()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-		deltaMove *= 2;
-	float3 m = float3(0.0f, 0.0f, 0.0f);
-	if (App->GetInput()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-		m += camera.front.Normalized() * deltaMove;
-	if (App->GetInput()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-		m += camera.front.Normalized() * -deltaMove;
-	if (App->GetInput()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-		m += camera.front.Cross(camera.up).Normalized() * -deltaMove;
-	if (App->GetInput()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-		m += camera.front.Cross(camera.up).Normalized() * deltaMove;
-	if (App->GetInput()->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
-		m.y += deltaMove;
-	if (App->GetInput()->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
-		m.y -= deltaMove;
-
-	if (App->GetInput()->GetMouseButtonDown(1) == KEY_REPEAT) {
-		iPoint m = App->GetInput()->GetMouseMotion();
-		RotateH(-m.x * delta);
-		RotateV(-m.y * delta);
+	if (App->GetInput()->GetKey(SDL_SCANCODE_O) == KEY_DOWN) {
+		orbiting = !orbiting;
+		LookAt(float3::zero);
 	}
+		
 
-	if (App->GetInput()->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		RotateH(-deltaTurn);
-	if (App->GetInput()->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		RotateH(deltaTurn);
-	if (App->GetInput()->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		RotateV(deltaTurn);
-	if (App->GetInput()->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		RotateV(-deltaTurn);
-	
-	camera.pos += m;
+	if (orbiting)
+		Orbit(delta);
+	else {
+		if (App->GetInput()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+			deltaMove *= 2;
+		float3 m = float3(0.0f, 0.0f, 0.0f);
+		if (App->GetInput()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+			m += camera.front.Normalized() * deltaMove;
+		if (App->GetInput()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+			m += camera.front.Normalized() * -deltaMove;
+		if (App->GetInput()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+			m += camera.front.Cross(camera.up).Normalized() * -deltaMove;
+		if (App->GetInput()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+			m += camera.front.Cross(camera.up).Normalized() * deltaMove;
+		if (App->GetInput()->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
+			m.y += deltaMove;
+		if (App->GetInput()->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
+			m.y -= deltaMove;
+
+		if (App->GetInput()->GetMouseButtonDown(1) == KEY_REPEAT) {
+			iPoint m = App->GetInput()->GetMouseMotion();
+			RotateH(-m.x * delta);
+			RotateV(-m.y * delta);
+		}
+
+		if (App->GetInput()->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+			RotateH(-deltaTurn);
+		if (App->GetInput()->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+			RotateH(deltaTurn);
+		if (App->GetInput()->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+			RotateV(deltaTurn);
+		if (App->GetInput()->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+			RotateV(-deltaTurn);
+
+		camera.pos += m;
+	}
     return UPDATE_CONTINUE;
 }
 
@@ -135,8 +146,27 @@ void ModuleCamera::Rotate(double alpha, float3 axis)
 
 void ModuleCamera::LookAt(float3 target)
 {
-	camera.pos = target - 3 * float3::unitZ;
+	float size = App->GetExercice()->GetModelSize();
+	camera.pos = target + 1.5f * size * float3::unitZ + size * 0.5f * float3::unitY;
 
-	camera.front = float3::unitZ;
+	camera.front = -float3::unitZ;
 	camera.up = float3::unitY;
+}
+
+void ModuleCamera::Orbit(float delta)
+{
+	float orbitSpeed = pi/3;
+	float alpha = delta * orbitSpeed / 2;
+	float radius = camera.pos.xz().Length();
+	float targetRad = 1.5f * App->GetExercice()->GetModelSize();
+	float h = camera.pos.y;
+	float th = App->GetExercice()->GetModelSize() / 2;
+	RotateH(alpha);
+	float3 movement = 2 * radius * tan(alpha) * camera.front.Cross(camera.up).Normalized();
+	MoveCamera(movement); // Orbiting Movement
+	RotateH(alpha);
+	float3 resizeMove = camera.front.Normalized() * delta * (radius - targetRad) / 3;
+	resizeMove += camera.up.Normalized() * delta * (th - h) / 3;
+	MoveCamera(resizeMove);
+
 }

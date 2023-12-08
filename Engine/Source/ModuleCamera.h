@@ -19,6 +19,7 @@ public:
 	bool SetAspectRatio(float aspect);
 	void LookAt(float x, float y, float z);
 	void LookAt(float3 target);
+	void Orbit(float delta);
 	float3 MoveCamera(float3 movement);
 	void RotateH(double alpha);
 	void RotateV(double alpha);
@@ -27,5 +28,6 @@ public:
 private:
 	Frustum camera;
 	float currentAspect;
+	bool orbiting = false;
 
 };

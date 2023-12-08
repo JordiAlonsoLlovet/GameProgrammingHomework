@@ -24,9 +24,12 @@ public:
 	bool CleanUp();
 	void Load(const char* dir, const char* assetFileName);
 	void ChangeModel(const char* fileDir);
+	float GetModelSize() const { return realSize; }
 
 private:
 	unsigned program;
 	std::vector<Mesh*> meshes;
 	std::vector<unsigned> textures;
+	float modelSize;
+	float realSize;
 };

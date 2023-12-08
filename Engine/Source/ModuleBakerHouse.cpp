@@ -31,6 +31,7 @@ ModuleBakerHouse::~ModuleBakerHouse()
 
 void ModuleBakerHouse::Load(const char* dir, const char* assetFileName)
 {
+	modelSize = 0;
 	static tinygltf::TinyGLTF gltfContext;
 	tinygltf::Model model;
 	std::string error, warning;
@@ -46,7 +47,8 @@ void ModuleBakerHouse::Load(const char* dir, const char* assetFileName)
 		for (const auto& primitive : srcMesh.primitives)
 		{
 			Mesh* mesh = new Mesh;
-			mesh->Load(model, srcMesh, primitive);
+			float s = mesh->Load(model, srcMesh, primitive);
+			if (s > modelSize) modelSize = s;
 			meshes.push_back(mesh);
 		}
 	}
@@ -86,10 +88,14 @@ update_status ModuleBakerHouse::Update()
 {
 	float4x4 proj = App->GetCamera()->GetProjection();
 	float4x4 view = App->GetCamera()->GetView();
+	static bool autoScale = false;
 	static float scale = 1.0f;
 	static float rotateX = 0.0f;
 	static float rotateY = 0.0f;
 	static float rotateZ = 0.0f;
+	realSize = modelSize * scale;
+	if (autoScale)
+		scale = 1 / modelSize;
 
 	int test = App->GetInput()->GetKey(SDL_SCANCODE_F);
 	if (test == KEY_DOWN)
@@ -98,6 +104,7 @@ update_status ModuleBakerHouse::Update()
 	/*********** ImGUI ************/
 	ImGui::Begin("Model Configuration");
 	ImGui::SliderFloat("Scale", &scale, 0.0f, 100.0f, "%.3f", ImGuiSliderFlags_Logarithmic);
+	ImGui::Checkbox("AutoScale into a 10x10 box", &autoScale);
 	ImGui::SliderFloat("RotateX", &rotateX, 0, 360);
 	ImGui::SliderFloat("RotateY", &rotateY, 0, 360);
 	ImGui::SliderFloat("RotateZ", &rotateZ, 0, 360);

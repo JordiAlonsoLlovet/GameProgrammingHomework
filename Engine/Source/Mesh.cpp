@@ -7,17 +7,21 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-void Mesh::Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive)
+float Mesh::Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive)
 {
 	materialIndex = primitive.material;
 	unsigned int indAcc = 0;
 	const tinygltf::Accessor* accessors[NUM_ATTRIBUTES];
+	float3 max;
 
 	const auto& itPos = primitive.attributes.find("POSITION");
 	const auto& itTex = primitive.attributes.find("TEXCOORD_0");
 	if (itPos != primitive.attributes.end()) {
 		accessors[indAcc++] = &model.accessors[itPos->second];
 		vertexCount = accessors[0]->count;
+		max.x = accessors[0]->maxValues[0];
+		max.y = accessors[0]->maxValues[1];
+		max.z = accessors[0]->maxValues[2];
 	}
 	if (itTex != primitive.attributes.end())
 		accessors[indAcc++] = &model.accessors[itTex->second];
@@ -48,6 +52,8 @@ void Mesh::Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const 
 
 	///Create VAO
 	CreateVAO(accessors, indAcc);
+
+	return max.Length();
 }
 
 void Mesh::LoadEBO(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive)
