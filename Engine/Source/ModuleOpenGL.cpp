@@ -51,7 +51,7 @@ bool ModuleOpenGL::Init()
 	glEnable(GL_DEBUG_OUTPUT); // Enable Output Callbacks
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // Output Callbacks
 	glDebugMessageCallback(&OurOpenGLErrorFunction, nullptr); // sets the callback
-	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true); // filters notifications
+	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE); // filters notifications
 #endif
 
 

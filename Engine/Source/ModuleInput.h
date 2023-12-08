@@ -42,6 +42,12 @@ public:
 		return mouse_buttons[id - 1];
 	}
 
+	// Get mouse / axis position
+	const iPoint& GetMouseMotion() const { return mouse_motion; };
+	const iPoint& GetMousePosition() const {
+		return mouse;
+	};
+
 	bool KeyPress(int id) const
 	{
 		return keyboard[id] == KEY_REPEAT || keyboard[id] == KEY_DOWN;
@@ -50,6 +56,6 @@ public:
 private:
 	KeyState *keyboard = NULL;
 	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];
-	int mouse_motion[2];
-	int mouse[2];
+	iPoint mouse_motion;
+	iPoint mouse;
 };

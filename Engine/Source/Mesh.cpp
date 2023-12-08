@@ -6,7 +6,6 @@
 #include "tinygltf/tiny_gltf.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
-#define NUM_ATTRIBUTES 2
 
 void Mesh::Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive)
 {
@@ -48,7 +47,7 @@ void Mesh::Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const 
 	LoadEBO(model, mesh, primitive);
 
 	///Create VAO
-	CreateVAO(*accessors, indAcc);
+	CreateVAO(accessors, indAcc);
 }
 
 void Mesh::LoadEBO(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive)
@@ -84,7 +83,7 @@ void Mesh::LoadEBO(const tinygltf::Model& model, const tinygltf::Mesh& mesh, con
 	}
 }
 
-void Mesh::CreateVAO(const tinygltf::Accessor* accessors, const unsigned int numAttr)
+void Mesh::CreateVAO(const tinygltf::Accessor* accessors[NUM_ATTRIBUTES], const unsigned int numAttr)
 {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -93,8 +92,8 @@ void Mesh::CreateVAO(const tinygltf::Accessor* accessors, const unsigned int num
 	unsigned int offset = 0;
 	for (unsigned int a = 0; a < numAttr; ++a) {
 		glEnableVertexAttribArray(a);
-		glVertexAttribPointer(a, AttributNumElements(accessors[a].type), accessors[a].componentType, GL_FALSE, 0, (void*)offset);
-		offset += accessors[a].count * AttributNumElements(accessors[a].type) * SizeFromGlType(accessors[a].componentType);
+		glVertexAttribPointer(a, AttributNumElements(accessors[a]->type), accessors[a]->componentType, GL_FALSE, 0, (void*)offset);
+		offset += accessors[a]->count * AttributNumElements(accessors[a]->type) * SizeFromGlType(accessors[a]->componentType);
 	}
 	glBindVertexArray(0);
 }

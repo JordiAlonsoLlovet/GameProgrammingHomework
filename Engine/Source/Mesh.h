@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "Application.h"
 
+#define NUM_ATTRIBUTES 2
+
 namespace tinygltf {
 	class Model;
 	class Mesh;
@@ -14,7 +16,7 @@ class Mesh {
 public:
 	void Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive);
 	void LoadEBO(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive);
-	void CreateVAO(const tinygltf::Accessor* accessors, const unsigned int numAttr);
+	void CreateVAO(const tinygltf::Accessor* accessors[NUM_ATTRIBUTES], const unsigned int numAttr);
 	void Render(unsigned program, const std::vector<unsigned>& textures) const;
 
 	static unsigned int SizeFromGlType(int glDefineType);

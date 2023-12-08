@@ -31,8 +31,9 @@ update_status ModuleCamera::Update() {
 	ImGui::SliderFloat("Movement speed", &cameraSpeed, 0.0f, CAMERA_SPEED*10);
 	if (ImGui::SliderFloat("FOV", &f, 0, 180))
 		SetFOV(pi * f / 180);
-	float deltaMove = App->GetClock()->GetDeltaTime() * cameraSpeed / (double)CLOCKS_PER_SEC;
-	float deltaTurn = App->GetClock()->GetDeltaTime() * CAMERA_TURNING_SPEED / (double)CLOCKS_PER_SEC;
+	float delta = App->GetClock()->GetDeltaTime() / (double)CLOCKS_PER_SEC;
+	float deltaMove = delta * cameraSpeed;
+	float deltaTurn = delta * CAMERA_TURNING_SPEED;
 	if (App->GetInput()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 		deltaMove *= 2;
 	float3 m = float3(0.0f, 0.0f, 0.0f);
@@ -48,6 +49,12 @@ update_status ModuleCamera::Update() {
 		m.y += deltaMove;
 	if (App->GetInput()->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
 		m.y -= deltaMove;
+
+	if (App->GetInput()->GetMouseButtonDown(1) == KEY_REPEAT) {
+		iPoint m = App->GetInput()->GetMouseMotion();
+		RotateH(-m.x * delta);
+		RotateV(-m.y * delta);
+	}
 
 	if (App->GetInput()->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		RotateH(-deltaTurn);

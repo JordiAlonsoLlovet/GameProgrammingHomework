@@ -44,6 +44,7 @@ bool ModuleInput::Init()
 update_status ModuleInput::Update()
 {
     SDL_Event sdlEvent;
+	mouse_motion.x = 0; mouse_motion.y = 0;
 
     while (SDL_PollEvent(&sdlEvent) != 0)
     {
@@ -63,7 +64,21 @@ update_status ModuleInput::Update()
                         return UPDATE_STOP;
                                 
                     break;
-									
+				case SDL_MOUSEBUTTONDOWN:
+					mouse_buttons[sdlEvent.button.button - 1] = KEY_DOWN;
+					break;
+
+				case SDL_MOUSEBUTTONUP:
+					mouse_buttons[sdlEvent.button.button - 1] = KEY_UP;
+					break;
+
+				case SDL_MOUSEMOTION:
+					mouse_motion.x = sdlEvent.motion.xrel;
+					mouse_motion.y = sdlEvent.motion.yrel;
+					mouse.x = sdlEvent.motion.x;
+					mouse.y = sdlEvent.motion.y;
+					//LOG("Motion: %d, %d; Position: %d, %d", mouse_motion.x, mouse_motion.y, mouse.x, mouse.y);
+					break;
             }
 
 			//mouse_motion = { 0, 0 };
