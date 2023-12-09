@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleTimer.h"
+#include "ModuleEditor.h"
 #include "ModuleBakerHouse.h"
 #include "SDL.h"
 #include "imgui.h"
@@ -29,10 +30,9 @@ bool ModuleCamera::Init() {
 update_status ModuleCamera::Update() {
 	static float cameraSpeed = CAMERA_SPEED;
 	static float f = 90;
-	static bool show = true;
-	ADD_ImGUI_WINDOW("Camara");
-	if (show) {
-		ImGui::Begin("Modulo de Camara", &show);
+	if (App->GetEditor()->ShowWindow(CONFIG_W)) {
+		ImGui::Begin(CONFIG_W);
+		ImGui::SeparatorText("Camera");
 		ImGui::SliderFloat("Movement speed", &cameraSpeed, 0.0f, CAMERA_SPEED*10);
 		if (ImGui::SliderFloat("FOV", &f, 0, 180))
 			SetFOV(pi * f / 180);

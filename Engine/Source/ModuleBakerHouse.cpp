@@ -5,6 +5,7 @@
 #include "ModuleProgram.h"
 #include "ModuleTexture.h"
 #include "ModuleInput.h"
+#include "ModuleEditor.h"
 #include "MathGeoLib.h"
 #include "SDL.h"
 #include <GL/glew.h>
@@ -95,10 +96,10 @@ update_status ModuleBakerHouse::Update()
 	static float rotateZ = 0.0f;
 
 	/*********** ImGUI ************/
-	static bool show = true;
-	ADD_ImGUI_WINDOW("Model");
-	if (show) {
-		ImGui::Begin("Model Configuration", &show);
+	
+	if (App->GetEditor()->ShowWindow(CONFIG_W)) {
+		ImGui::Begin(CONFIG_W);
+		ImGui::SeparatorText("Meshes");
 		ImGui::SliderFloat("Scale", &scale, 0.0f, 100.0f, "%.3f", ImGuiSliderFlags_Logarithmic);
 		ImGui::Checkbox("AutoScale into a 10x10 box", &autoScale);
 		ImGui::SliderFloat("RotateX", &rotateX, 0, 360);

@@ -13,6 +13,8 @@ ModuleEditor::ModuleEditor() {}
 ModuleEditor::~ModuleEditor() {}
 
 bool ModuleEditor::Init() {
+    SDL_DisplayMode DM;
+    SDL_GetDesktopDisplayMode(0, &DM);
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -36,6 +38,11 @@ bool ModuleEditor::Init() {
 
     ImGui_ImplSDL2_InitForOpenGL(App->GetWindow()->window, App->GetOpenGL()->context);
     ImGui_ImplOpenGL3_Init("#version 460");
+    
+    //Windows to use
+    myWindows[0] = { "Configuration", true, DM.w / 4, (DM.h / 2) -50, 0, DM.h / 2 };
+    myWindows[1] = { "Properties", true, DM.w / 4, DM.h / 2, DM.w *3/4, 0 };
+    myWindows[2] = { "Logs", true, DM.w / 2, 250, DM.w / 4, DM.h - 300 };
     return true;
 }
 
@@ -81,6 +88,14 @@ update_status ModuleEditor::PreUpdate() {
     }
     ImGui::Separator();
     ImGui::End();
+    for (int i = 0; i < NUM_WINDOWS; ++i) {
+        if (myWindows[i].show) {
+            ImGui::SetNextWindowSize(ImVec2(myWindows[i].w, myWindows[i].h), ImGuiCond_Once);
+            ImGui::SetNextWindowPos(ImVec2(myWindows[i].x, myWindows[i].y), ImGuiCond_Once);
+            ImGui::Begin(myWindows[i].title, &myWindows[i].show);
+            ImGui::End();
+        }
+    }
 
     return UPDATE_CONTINUE;
 }
@@ -88,22 +103,22 @@ update_status ModuleEditor::Update() {
     SDL_DisplayMode DM;
     SDL_GetDesktopDisplayMode(0, &DM);
     static bool showDebug = false;
-    static bool showTerminal = true;
     static bool AutoScroll = true;
     if (showDebug)
         ImGui::ShowDemoWindow(&showDebug);
+    ImGui::SetNextWindowSize(ImVec2(DM.w/4, DM.h/2), ImGuiCond_Once);
+    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
     ImGui::Begin("General");
     ImGui::BeginChild("Show windows");
+    for (int i = 0; i < NUM_WINDOWS; ++i) {
+        ImGui::Checkbox(myWindows[i].title, &myWindows[i].show);
+    }
     ImGui::Checkbox("Demo Window", &showDebug);
-    ImGui::Checkbox("Logs Window", &showTerminal);
     ImGui::EndChild();
     ImGui::End();
     //TERMINAL
-    if (showTerminal) {
-        ImGui::SetNextWindowSize(ImVec2(900, 250), ImGuiCond_Once);
-        ImGui::SetNextWindowPos(ImVec2(DM.w/2 - 450, DM.h-300), ImGuiCond_Once);
-    
-        ImGui::Begin("Logs", &showTerminal);
+    if (ShowWindow(LOGS_W)) {
+        ImGui::Begin(LOGS_W);
         ImVec2 tSize = ImGui::GetWindowSize();
         char* data = nullptr;
         FILE* file = nullptr;
@@ -153,4 +168,12 @@ bool ModuleEditor::CleanUp()
     ImGui::DestroyContext();
 
     return true;
+}
+
+bool ModuleEditor::ShowWindow(const char* name) {
+    for (MyWindow w : myWindows) {
+        if (w.title == name)
+            return w.show;
+    }
+    return false;
 }

@@ -3,6 +3,8 @@
 #include "MathGeoLib.h"
 #include "SDL/include/SDL.h"
 #include "imgui.h"
+#include "Application.h"
+#include "ModuleEditor.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
 #include <vector>
@@ -54,10 +56,9 @@ update_status ModuleTimer::Update() {
 		frameCounter = 0;
 		longTime = clock();
 	}
-	static bool show = true;
-	ADD_ImGUI_WINDOW("Properties");
-	if (show) {
-		ImGui::Begin("Properties", &show);
+	
+	if (App->GetEditor()->ShowWindow(PROPERTIES_W)) {
+		ImGui::Begin(PROPERTIES_W);
 		ImGui::SliderInt("Max FPS", &fpsLimit, 0, 200);
 		const char* t = string_format("FPS: %.0f", fps_log.back());
 		float recordFps = *std::max_element(std::begin(fps_log), std::end(fps_log));

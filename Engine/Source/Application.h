@@ -36,6 +36,7 @@ public:
     ModuleDebugDraw* GetDD() { return dd; }
     ModuleTimer* GetClock() { return clock; }
     ModuleBakerHouse* GetExercice() { return house; }
+    ModuleEditor* GetEditor() { return editor; }
 
 private:
 

@@ -1,8 +1,21 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#define NUM_WINDOWS 3
+#define LOGS_W "Logs"
+#define PROPERTIES_W "Properties"
+#define CONFIG_W "Configuration"
 
 typedef unsigned __int8 Uint8;
+
+struct MyWindow {
+	const char* title = "";
+	bool show = true;
+	int w;
+	int h;
+	int x;
+	int y;
+};
 
 class ModuleEditor : public Module
 {
@@ -15,7 +28,9 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	bool CleanUp();
+	bool ShowWindow(const char* name);
 
 private:
 	const char* license;
+	MyWindow myWindows[NUM_WINDOWS];
 };
