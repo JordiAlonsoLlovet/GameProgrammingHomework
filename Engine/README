@@ -1,0 +1,14 @@
+This is a simple model renderer and soon to be a Game Engine created for educational pourposes. For now it can load a GLTF model and display it.
+Link: https://github.com/JordiAlonsoLlovet/GameProgrammingHomework/tree/main/Engine
+* Instructions *
+- The Engine will load the model BakerHouse.gltf by default. You can change it by either selecting one of the available options in the Configuration window or by simply draging a .gltf file into the main Engine Window.
+- You can move the camera with WASD, an use the mouse wheel to move forward and backwards with more acuracy. Q and E will move the camera up and down.
+- You can change the direction of the camera with the ARROW keys or simply moving the mouse while left clicking.
+** Configuration **
+- From the Configuration window you can change the current loaded model, rotate the model or change the model's scale. 
+- By default all models will be scaled to roughly fit into a 10x10x10 box. This can be disabled by unchecking the AutoScale Checkbox.
+- You can also adjust the camera's movement speed, FOV, and the maximum FPS allowed.
+** Logs **
+- The Logs window displays all of the Engine's output information.
+- The button Clear will delete all Logs.
+- Logs are also saved into a text file called logs.txt
