@@ -47,6 +47,7 @@ public:
 	const iPoint& GetMousePosition() const {
 		return mouse;
 	};
+	const iPoint& GetWheelMotion() const { return wheel_motion; };
 
 	bool KeyPress(int id) const
 	{
@@ -58,4 +59,5 @@ private:
 	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];
 	iPoint mouse_motion;
 	iPoint mouse;
+	iPoint wheel_motion;
 };

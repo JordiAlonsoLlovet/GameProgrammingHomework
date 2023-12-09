@@ -29,9 +29,19 @@ bool ModuleCamera::Init() {
 update_status ModuleCamera::Update() {
 	static float cameraSpeed = CAMERA_SPEED;
 	static float f = 90;
-	ImGui::SliderFloat("Movement speed", &cameraSpeed, 0.0f, CAMERA_SPEED*10);
-	if (ImGui::SliderFloat("FOV", &f, 0, 180))
-		SetFOV(pi * f / 180);
+	static bool show = true;
+	ADD_ImGUI_WINDOW("Camara");
+	if (show) {
+		ImGui::Begin("Modulo de Camara", &show);
+		ImGui::SliderFloat("Movement speed", &cameraSpeed, 0.0f, CAMERA_SPEED*10);
+		if (ImGui::SliderFloat("FOV", &f, 0, 180))
+			SetFOV(pi * f / 180);
+		ImGui::SliderFloat("Render distance", &camera.farPlaneDistance, 10.0f, 500.0f);
+		ImGui::Text("Camera Position: (%.1f, %.1f, %.1f)", camera.pos.x, camera.pos.y, camera.pos.z);
+		ImGui::Checkbox("Orbiting", &orbiting);
+		ImGui::End();
+	}
+	
 	float delta = App->GetClock()->GetDeltaTime() / (double)CLOCKS_PER_SEC;
 	float deltaMove = delta * cameraSpeed;
 	float deltaTurn = delta * CAMERA_TURNING_SPEED;
@@ -60,12 +70,14 @@ update_status ModuleCamera::Update() {
 		if (App->GetInput()->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
 			m.y -= deltaMove;
 
+		m += camera.front.Normalized() * App->GetInput()->GetWheelMotion().y * deltaMove;
+
 		if (App->GetInput()->GetMouseButtonDown(1) == KEY_REPEAT) {
 			iPoint m = App->GetInput()->GetMouseMotion();
 			RotateH(-m.x * delta);
 			RotateV(-m.y * delta);
 		}
-
+		
 		if (App->GetInput()->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 			RotateH(-deltaTurn);
 		if (App->GetInput()->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)

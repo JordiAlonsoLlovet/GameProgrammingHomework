@@ -5,12 +5,12 @@
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
+#include <vector>
 
 ModuleTimer::ModuleTimer() {}
 ModuleTimer::~ModuleTimer() {}
 
 bool ModuleTimer::Init() {
-	minDelta = 1000 / (long)fpsLimit;
 	ptime = std::clock();
 	
 	longTime = std::clock();
@@ -18,6 +18,9 @@ bool ModuleTimer::Init() {
 }
 update_status ModuleTimer::Update() {
 	++frameCounter;
+	static int fpsLimit = 120;
+	static std::vector<float> fps_log;
+	
 	static Uint64 LastTime = SDL_GetPerformanceCounter();
 	static Uint64 frequency = SDL_GetPerformanceFrequency();
 	static double minElaps = frequency / fpsLimit;
@@ -32,9 +35,9 @@ update_status ModuleTimer::Update() {
 		ElapsedTime = (ncounter - LastTime);
 	}*/
 
-	if (deltaTime < minDelta)
+	if (deltaTime < 1000 / (long)fpsLimit)
 	{
-		SDL_Delay(minDelta - deltaTime);
+		SDL_Delay(1000 / (long)fpsLimit - deltaTime);
 		deltaTime = (clock() - ptime);
 	}
 
@@ -45,14 +48,24 @@ update_status ModuleTimer::Update() {
 	//double FPS = (double)frequency / (double)ElapsedTime;
 	long c = ptime - longTime;
 	if (c >= 500) {
-		
-		fps = frameCounter * CLOCKS_PER_SEC / c;
+		fps_log.push_back(frameCounter * CLOCKS_PER_SEC / c);
+		if (fps_log.size() > 100)
+			fps_log.erase(fps_log.begin());
 		frameCounter = 0;
 		longTime = clock();
 	}
-	const char* t = string_format("FPS: %.0f", fps);
-	ImGui::Text(t);
-	free((void*)t);
+	static bool show = true;
+	ADD_ImGUI_WINDOW("FPS");
+	if (show) {
+		ImGui::Begin("Timer Module", &show);
+		ImGui::SliderInt("Max FPS", &fpsLimit, 0, 200);
+		const char* t = string_format("FPS: %.0f", fps_log.back());
+		float recordFps = *std::max_element(std::begin(fps_log), std::end(fps_log));
+		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, t, 0.0f, recordFps, ImVec2(310, 100));
+		free((void*)t);
+		ImGui::End();
+	}
+	
 	return UPDATE_CONTINUE;
 }
 

@@ -88,7 +88,7 @@ update_status ModuleBakerHouse::Update()
 {
 	float4x4 proj = App->GetCamera()->GetProjection();
 	float4x4 view = App->GetCamera()->GetView();
-	static bool autoScale = false;
+	static bool autoScale = true;
 	static float scale = 1.0f;
 	static float rotateX = 0.0f;
 	static float rotateY = 0.0f;
@@ -102,13 +102,17 @@ update_status ModuleBakerHouse::Update()
 		App->GetCamera()->LookAt(0.0f, 0.0f, 0.0f);
 
 	/*********** ImGUI ************/
-	ImGui::Begin("Model Configuration");
-	ImGui::SliderFloat("Scale", &scale, 0.0f, 100.0f, "%.3f", ImGuiSliderFlags_Logarithmic);
-	ImGui::Checkbox("AutoScale into a 10x10 box", &autoScale);
-	ImGui::SliderFloat("RotateX", &rotateX, 0, 360);
-	ImGui::SliderFloat("RotateY", &rotateY, 0, 360);
-	ImGui::SliderFloat("RotateZ", &rotateZ, 0, 360);
-	ImGui::End();
+	static bool show = true;
+	ADD_ImGUI_WINDOW("Model");
+	if (show) {
+		ImGui::Begin("Model Configuration", &show);
+		ImGui::SliderFloat("Scale", &scale, 0.0f, 100.0f, "%.3f", ImGuiSliderFlags_Logarithmic);
+		ImGui::Checkbox("AutoScale into a 10x10 box", &autoScale);
+		ImGui::SliderFloat("RotateX", &rotateX, 0, 360);
+		ImGui::SliderFloat("RotateY", &rotateY, 0, 360);
+		ImGui::SliderFloat("RotateZ", &rotateZ, 0, 360);
+		ImGui::End();
+	}
 	/*********** End ImGUI ************/
 	float4x4 modelprojection = float4x4::FromTRS(float3(0.0f, 0.0f, 0.0f),
 		float4x4::RotateZ(rotateZ * pi / 180) * float4x4::RotateX(rotateX * pi / 180) * float4x4::RotateY(rotateY * pi / 180),
@@ -147,6 +151,7 @@ void ModuleBakerHouse::LoadMaterials(const tinygltf::Model& srcModel, const char
 			std::wstring widestr = std::wstring(uri.begin(), uri.end());
 			textureId = (ModuleTexture::LoadTextureFromFile(widestr.c_str()));
 		}
+		else LOG("This model has no texture.")
 		textures.push_back(textureId);
 	}
 }
@@ -167,12 +172,13 @@ void ModuleBakerHouse::ChangeModel(const char* fileDir) {
 	if (pos != std::string::npos && s.substr(dotPos) == ".gltf") {
 		std::string directory = s.substr(0, pos +1).c_str();
 		std::string fileName = s.substr(pos + 1).c_str();
+		LOG("Loading new model.")
 		meshes.clear();
 		textures.clear();
 		Load(directory.c_str(), fileName.c_str());
 	}
 	else
-		LOG("Archivo no valido para importación.");
+		LOG("Invalid file for importing.");
 }
 
 

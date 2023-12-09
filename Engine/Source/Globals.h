@@ -5,6 +5,12 @@
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
 #define CLEAR_LOG() clearLog();
+#define ADD_ImGUI_WINDOW(name) ImGui::Begin("General"); \
+ImGui::BeginChild("Show windows"); \
+ImGui::Checkbox(name, &show);\
+ImGui::EndChild();\
+ImGui::End();
+
 
 void log(const char file[], int line, const char* format, ...);
 void clearLog();

@@ -45,6 +45,7 @@ update_status ModuleInput::Update()
 {
     SDL_Event sdlEvent;
 	mouse_motion.x = 0; mouse_motion.y = 0;
+	wheel_motion.x = 0; wheel_motion.y = 0;
 
     while (SDL_PollEvent(&sdlEvent) != 0)
     {
@@ -78,6 +79,11 @@ update_status ModuleInput::Update()
 					mouse.x = sdlEvent.motion.x;
 					mouse.y = sdlEvent.motion.y;
 					//LOG("Motion: %d, %d; Position: %d, %d", mouse_motion.x, mouse_motion.y, mouse.x, mouse.y);
+					break;
+				
+				case SDL_MOUSEWHEEL:
+					wheel_motion.x = sdlEvent.wheel.x;
+					wheel_motion.y = sdlEvent.wheel.y;
 					break;
             }
 

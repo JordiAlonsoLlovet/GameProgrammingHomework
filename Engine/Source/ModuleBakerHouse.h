@@ -30,6 +30,7 @@ private:
 	unsigned program;
 	std::vector<Mesh*> meshes;
 	std::vector<unsigned> textures;
+	unsigned defTexture;
 	float modelSize;
 	float realSize;
 };

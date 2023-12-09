@@ -17,8 +17,6 @@ public:
     long GetDeltaTime() { return deltaTime; }
 
 private:
-    const int fpsLimit = 120;
-    float fps = 0.0f;
     long minDelta;
     long ptime;
     long deltaTime;

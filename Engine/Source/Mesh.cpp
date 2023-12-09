@@ -1,9 +1,9 @@
 #include "Mesh.h"
-#include <GL/glew.h>
 #include "SDL.h"
 #include "MathGeoLib.h"
 #include "ModuleTexture.h"
 #include "tinygltf/tiny_gltf.h"
+#include <GL/glew.h>
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -53,6 +53,7 @@ float Mesh::Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const
 	///Create VAO
 	CreateVAO(accessors, indAcc);
 
+	//This just returns the maximum distance from a vertex to the origin. It's not a good way to measure the Modl's size but will do for now.
 	return max.Length();
 }
 
