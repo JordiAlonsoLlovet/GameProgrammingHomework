@@ -55,9 +55,9 @@ update_status ModuleTimer::Update() {
 		longTime = clock();
 	}
 	static bool show = true;
-	ADD_ImGUI_WINDOW("FPS");
+	ADD_ImGUI_WINDOW("Properties");
 	if (show) {
-		ImGui::Begin("Timer Module", &show);
+		ImGui::Begin("Properties", &show);
 		ImGui::SliderInt("Max FPS", &fpsLimit, 0, 200);
 		const char* t = string_format("FPS: %.0f", fps_log.back());
 		float recordFps = *std::max_element(std::begin(fps_log), std::end(fps_log));

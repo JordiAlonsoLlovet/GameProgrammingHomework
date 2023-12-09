@@ -93,13 +93,6 @@ update_status ModuleBakerHouse::Update()
 	static float rotateX = 0.0f;
 	static float rotateY = 0.0f;
 	static float rotateZ = 0.0f;
-	realSize = modelSize * scale;
-	if (autoScale)
-		scale = 1 / modelSize;
-
-	int test = App->GetInput()->GetKey(SDL_SCANCODE_F);
-	if (test == KEY_DOWN)
-		App->GetCamera()->LookAt(0.0f, 0.0f, 0.0f);
 
 	/*********** ImGUI ************/
 	static bool show = true;
@@ -111,9 +104,33 @@ update_status ModuleBakerHouse::Update()
 		ImGui::SliderFloat("RotateX", &rotateX, 0, 360);
 		ImGui::SliderFloat("RotateY", &rotateY, 0, 360);
 		ImGui::SliderFloat("RotateZ", &rotateZ, 0, 360);
+		static int selected_m = 0;
+		const char* names[] = { "Baker House", "Duck", "Textured Box" };
+		const char* path[] = { "./resources/BakerHouse/BakerHouse.gltf", "./resources/Duck/Duck.gltf", "./resources/BoxTextured/BoxTextured.gltf" };
+		static bool toggles[] = { true, false, false };
+
+		// Simple selection popup (if you want to show the current selection inside the Button itself,
+		// you may want to build a string using the "###" operator to preserve a constant ID with a variable label)
+		if (ImGui::Button("Select.."))
+			ImGui::OpenPopup("my_select_popup");
+		ImGui::SameLine();
+		ImGui::TextUnformatted(selected_m == -1 ? "<None>" : names[selected_m]);
+		if (ImGui::BeginPopup("my_select_popup"))
+		{
+			ImGui::SeparatorText("Aquarium");
+			for (int i = 0; i < IM_ARRAYSIZE(names); i++)
+				if (ImGui::Selectable(names[i])) {
+					selected_m = i;
+					ChangeModel(path[i]);
+				}
+			ImGui::EndPopup();
+		}
 		ImGui::End();
 	}
 	/*********** End ImGUI ************/
+	realSize = modelSize * scale;
+	if (autoScale)
+		scale = 1 / modelSize;
 	float4x4 modelprojection = float4x4::FromTRS(float3(0.0f, 0.0f, 0.0f),
 		float4x4::RotateZ(rotateZ * pi / 180) * float4x4::RotateX(rotateX * pi / 180) * float4x4::RotateY(rotateY * pi / 180),
 		float3(scale, scale, scale));

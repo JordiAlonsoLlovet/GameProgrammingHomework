@@ -54,6 +54,9 @@ update_status ModuleCamera::Update() {
 	if (orbiting)
 		Orbit(delta);
 	else {
+		if (App->GetInput()->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+			LookAt(0.0f, 0.0f, 0.0f);
+
 		if (App->GetInput()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 			deltaMove *= 2;
 		float3 m = float3(0.0f, 0.0f, 0.0f);

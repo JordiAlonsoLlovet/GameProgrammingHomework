@@ -61,15 +61,25 @@ update_status ModuleEditor::PreUpdate() {
         ImGui::BulletText("This engine has been developed as part of the UPC School \n"
             "Master in Videogame Programming.");
 
-        ImGui::SeparatorText("LICENSE:");
-        ImGui::BulletText("See the ShowDemoWindow() code in imgui_demo.cpp. <- you are here!");
-        ImGui::BulletText("See comments in imgui.cpp.");
-        ImGui::BulletText("See example applications in the examples/ folder.");
-        ImGui::BulletText("Read the FAQ at https://www.dearimgui.com/faq/");
-        ImGui::BulletText("Set 'io.ConfigFlags |= NavEnableKeyboard' for keyboard controls.");
-        ImGui::BulletText("Set 'io.ConfigFlags |= NavEnableGamepad' for gamepad controls.");
-
+        ImGui::SeparatorText("MIT License");
+        ImGui::BulletText("Copyright (c) 2023 Jordi Alonso Llovet");
+        ImGui::BulletText("Permission is hereby granted, free of charge, to any person obtaining a copy \n"
+            "of this software and associated documentation files(the \"Software\"), to deal \n"
+            "in the Software without restriction, including without limitation the rights \n"
+            "to use, copy, modify, merge, publish, distribute, sublicense, and /or sell \n"
+            "copies of the Software, and to permit persons to whom the Software is \n"
+            "furnished to do so, subject to the following conditions : ");
+        ImGui::BulletText("The above copyright notice and this permission notice shall be included in all \n"
+            "copies or substantial portions of the Software.");
+        ImGui::BulletText("THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR \n"
+            "IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, \n"
+            "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE \n"
+            "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER \n"
+            "LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, \n"
+            "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE \n"
+            "SOFTWARE.");
     }
+    ImGui::Separator();
     ImGui::End();
 
     return UPDATE_CONTINUE;

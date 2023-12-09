@@ -17,4 +17,5 @@ public:
 	bool CleanUp();
 
 private:
+	const char* license;
 };
