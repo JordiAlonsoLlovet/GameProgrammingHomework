@@ -143,6 +143,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\glew-2.1.0\lib\Release\x64</AdditionalLibraryDirectories>
       <Version>0.1</Version>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
