@@ -118,13 +118,34 @@ update_status ModuleBakerHouse::Update()
 		ImGui::TextUnformatted(selected_m == -1 ? "<None>" : names[selected_m]);
 		if (ImGui::BeginPopup("my_select_popup"))
 		{
-			ImGui::SeparatorText("Aquarium");
+			ImGui::SeparatorText("Models");
 			for (int i = 0; i < IM_ARRAYSIZE(names); i++)
 				if (ImGui::Selectable(names[i])) {
 					selected_m = i;
 					ChangeModel(path[i]);
 				}
 			ImGui::EndPopup();
+		}
+		ImGui::End();
+	}
+	if (App->GetEditor()->ShowWindow(PROPERTIES_W)) {
+		ImGui::Begin(PROPERTIES_W);
+		ImGui::SeparatorText("Geometry");
+		ImGui::Text("Number of meshes: %d", meshes.size());
+		int polygons = 0;
+		for (auto m : meshes) {
+			polygons += m->GetPolygonCout();
+		}
+		ImGui::Text("Polygons: %d", polygons);
+		ImGui::Text("Size (without scaling): %.1f", modelSize);
+		ImGui::Text("Size (scaled): %.1f", realSize);
+		ImGui::SeparatorText("Texture");
+		ImGui::Text("Number of textures: %d", textures.size());
+		for (int i = 0; i < textures.size(); ++i) {
+			const Metadata m = App->GetTexture()->GetMetadata(textures[i]);
+			ImGui::Text("Texture %d: %s", i+1, m.name.c_str());
+			ImGui::Text("Size of texture %d: %d x %d", i+1, m.width, m.height);
+			ImGui::Text("Number of Minmap levels: %d", m.minMapLevel);
 		}
 		ImGui::End();
 	}
@@ -167,7 +188,7 @@ void ModuleBakerHouse::LoadMaterials(const tinygltf::Model& srcModel, const char
 			const tinygltf::Image& image = srcModel.images[texture.source];
 			std::string uri = dir + image.uri;
 			std::wstring widestr = std::wstring(uri.begin(), uri.end());
-			textureId = (ModuleTexture::LoadTextureFromFile(widestr.c_str()));
+			textureId = (App->GetTexture()->LoadTextureFromFile(widestr.c_str()));
 		}
 		else LOG("This model has no texture.")
 		textures.push_back(textureId);

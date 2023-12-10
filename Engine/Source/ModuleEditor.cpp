@@ -40,8 +40,8 @@ bool ModuleEditor::Init() {
     ImGui_ImplOpenGL3_Init("#version 460");
     
     //Windows to use
-    myWindows[0] = { "Configuration", true, DM.w / 4, (DM.h / 2) -50, 0, DM.h / 2 };
-    myWindows[1] = { "Properties", true, DM.w / 4, DM.h / 2, DM.w *3/4, 0 };
+    myWindows[0] = { "Configuration", true, DM.w / 4, (DM.h * 2/3), DM.w * 3 / 4, DM.h / 3 };
+    myWindows[1] = { "Properties", true, DM.w / 4, DM.h / 3, DM.w *3/4, 0 };
     myWindows[2] = { "Logs", true, DM.w / 2, 250, DM.w / 4, DM.h - 300 };
     return true;
 }

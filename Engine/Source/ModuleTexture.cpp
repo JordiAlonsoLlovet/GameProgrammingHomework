@@ -2,6 +2,7 @@
 #include "ModuleTexture.h"
 #include <DirectXTex.h>
 #include <GL/glew.h>
+#include <string>
 
 using namespace DirectX;
 
@@ -61,6 +62,9 @@ unsigned ModuleTexture::LoadTextureFromFile(const wchar_t* tex_filename) //, ID3
         glBindTexture(GL_TEXTURE_2D, textures);
         glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, imageMetadata.width, imageMetadata.height, 0, format, type, image->GetPixels());
         if (imageMetadata.mipLevels <= 1) glGenerateMipmap(GL_TEXTURE_2D);
+        std::wstring ws = tex_filename;
+        std::string s(ws.begin(), ws.end());
+        savedTextures.push_back({textures, s, imageMetadata.width, imageMetadata.height, imageMetadata.mipLevels});
 
         return textures;
     }
@@ -68,4 +72,11 @@ unsigned ModuleTexture::LoadTextureFromFile(const wchar_t* tex_filename) //, ID3
         LOG("The texture could not be loaded.");
         return 0;
     }
+}
+
+Metadata ModuleTexture::GetMetadata(unsigned tex) {
+    for (auto st : savedTextures) {
+        if (st.id == tex) return st;
+    }
+    assert(false && "Looking fo non existent texture metadata");
 }

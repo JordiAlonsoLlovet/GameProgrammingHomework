@@ -27,7 +27,7 @@ bool ModuleRenderExercice::Init()
 		float4x4::RotateZ(pi / 4),
 		float3(1.0f, 1.0f, 1.0f));
 
-	texture = ModuleTexture::LoadTextureFromFile(L"./resources/Test-image-Baboon.ppm");
+	texture = App->GetTexture()->LoadTextureFromFile(L"./resources/Test-image-Baboon.ppm");
 	
 	char* vSource = ModuleProgram::LoadShaderSource("../Source/VertexShaderTexture.glsl");
 	char* fSource = ModuleProgram::LoadShaderSource("../Source/FragmentShaderTexture.glsl");

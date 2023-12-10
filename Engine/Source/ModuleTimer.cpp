@@ -57,8 +57,8 @@ update_status ModuleTimer::Update() {
 		longTime = clock();
 	}
 	
-	if (App->GetEditor()->ShowWindow(PROPERTIES_W)) {
-		ImGui::Begin(PROPERTIES_W);
+	if (App->GetEditor()->ShowWindow(CONFIG_W)) {
+		ImGui::Begin(CONFIG_W);
 		ImGui::SliderInt("Max FPS", &fpsLimit, 0, 200);
 		const char* t = string_format("FPS: %.0f", fps_log.back());
 		float recordFps = *std::max_element(std::begin(fps_log), std::end(fps_log));

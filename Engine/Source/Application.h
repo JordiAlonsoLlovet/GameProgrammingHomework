@@ -37,6 +37,7 @@ public:
     ModuleTimer* GetClock() { return clock; }
     ModuleBakerHouse* GetExercice() { return house; }
     ModuleEditor* GetEditor() { return editor; }
+    ModuleTexture* GetTexture() { return texture; }
 
 private:
 
@@ -50,6 +51,7 @@ private:
     ModuleBakerHouse* house = nullptr;
     ModuleDebugDraw* dd = nullptr;
     ModuleTimer* clock = nullptr;
+    ModuleTexture* texture = nullptr;
 
     std::list<Module*> modules;
     
