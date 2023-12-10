@@ -47,7 +47,7 @@ bool ModuleEditor::Init() {
 }
 
 update_status ModuleEditor::PreUpdate() {
-    const char* ghlink = "https://github.com/JordiAlonsoLlovet/GameProgrammingHomework";
+    const char* ghlink = "https://github.com/JordiAlonsoLlovet/GameProgrammingHomework/tree/main/Engine";
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
