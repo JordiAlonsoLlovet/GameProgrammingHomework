@@ -7,6 +7,13 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
+Mesh::~Mesh() {
+	glDeleteBuffers(1, &vbo);
+	glDeleteVertexArrays(1, &vao);
+	if (hasEBO)
+		glDeleteBuffers(1, &ebo);
+}
+
 float Mesh::Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive)
 {
 	materialIndex = primitive.material;
