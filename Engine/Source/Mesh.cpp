@@ -47,12 +47,17 @@ float Mesh::Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const
 		const tinygltf::Buffer* buffer = &model.buffers[bufferView->buffer];
 		const unsigned char* buff = &(buffer->data[accessors[i]->byteOffset + bufferView->byteOffset]);
 		unsigned int attributeSize = SizeFromGlType(accessors[i]->componentType) * AttributNumElements(accessors[i]->type);
-		for (unsigned int j = 0; j < accessors[i]->count; ++j) {
-			//float3 test = *reinterpret_cast<const float3*>(buffers[i]);
-			memcpy(&ptr[ptrIndex], buff, attributeSize);
-			buff += attributeSize;
-			ptrIndex += attributeSize;
-		}		
+		if (bufferView->byteStride == 0) {
+			memcpy(&ptr[ptrIndex], buff, attributeSize * accessors[i]->count);
+			ptrIndex += attributeSize * accessors[i]->count;
+		}
+		else
+			for (unsigned int j = 0; j < accessors[i]->count; ++j) {
+				//float3 test = *reinterpret_cast<const float3*>(buffers[i]);
+				memcpy(&ptr[ptrIndex], buff, attributeSize);
+				buff += bufferView->byteStride;
+				ptrIndex += attributeSize;
+			}		
 	}
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	LoadEBO(model, mesh, primitive);

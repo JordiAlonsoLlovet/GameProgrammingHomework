@@ -15,7 +15,6 @@ unsigned ModuleTexture::LoadTextureFromFile(const wchar_t* tex_filename) //, ID3
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glGenTextures(1, &textures);
-
     HRESULT hr;
     TexMetadata imageMetadata;
     ScratchImage* image = new ScratchImage();
@@ -65,7 +64,7 @@ unsigned ModuleTexture::LoadTextureFromFile(const wchar_t* tex_filename) //, ID3
         std::wstring ws = tex_filename;
         std::string s(ws.begin(), ws.end());
         savedTextures.push_back({textures, s, imageMetadata.width, imageMetadata.height, imageMetadata.mipLevels});
-        free(image);
+        delete image;
 
         return textures;
     }

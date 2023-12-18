@@ -16,10 +16,8 @@ class Mesh {
 public:
 	~Mesh();
 	float Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive);
-	void LoadEBO(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive);
-	void CreateVAO(const tinygltf::Accessor* accessors[NUM_ATTRIBUTES], const unsigned int numAttr);
 	void Render(unsigned program, const std::vector<unsigned>& textures) const;
-	int GetPolygonCout() {
+	int GetPolygonCout() const {
 		if (hasEBO) return indexCount / 3;
 		else return vertexCount / 3;
 	}
@@ -28,12 +26,14 @@ public:
 	static unsigned int AttributNumElements(int tinyDefineType);
 
 private:
-	unsigned int vbo;
-	unsigned int ebo;
-	unsigned int vao;
-	bool hasEBO;
-	int indexCount;
-	int vertexCount;
-	int byteOffset;
-	int materialIndex;
+	void LoadEBO(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive);
+	void CreateVAO(const tinygltf::Accessor* accessors[NUM_ATTRIBUTES], const unsigned int numAttr);
+	unsigned int vbo = 0;
+	unsigned int ebo = 0;
+	unsigned int vao = 0;
+	bool hasEBO = false;
+	int indexCount = 0;
+	int vertexCount = 0;
+	int byteOffset = 0;
+	int materialIndex = 0;
 };
