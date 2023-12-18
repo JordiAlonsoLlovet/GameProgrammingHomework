@@ -65,6 +65,7 @@ unsigned ModuleTexture::LoadTextureFromFile(const wchar_t* tex_filename) //, ID3
         std::wstring ws = tex_filename;
         std::string s(ws.begin(), ws.end());
         savedTextures.push_back({textures, s, imageMetadata.width, imageMetadata.height, imageMetadata.mipLevels});
+        free(image);
 
         return textures;
     }
@@ -74,8 +75,8 @@ unsigned ModuleTexture::LoadTextureFromFile(const wchar_t* tex_filename) //, ID3
     }
 }
 
-Metadata ModuleTexture::GetMetadata(unsigned tex) {
-    for (auto st : savedTextures) {
+const Metadata& ModuleTexture::GetMetadata(unsigned tex) const {
+    for (const Metadata& st : savedTextures) {
         if (st.id == tex) return st;
     }
     assert(false && "Looking fo non existent texture metadata");

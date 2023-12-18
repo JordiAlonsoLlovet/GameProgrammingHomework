@@ -17,7 +17,7 @@ class ModuleTexture : public Module
 public:
 
 	unsigned LoadTextureFromFile(const wchar_t* tex_filename);
-	Metadata GetMetadata(unsigned tex);
+	const Metadata& GetMetadata(unsigned tex) const;
 
 private:
 	std::vector<Metadata> savedTextures;

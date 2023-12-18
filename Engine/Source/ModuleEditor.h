@@ -28,9 +28,8 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	bool CleanUp();
-	bool ShowWindow(const char* name);
+	bool ShowWindow(const char* name) const;
 
 private:
-	const char* license;
 	MyWindow myWindows[NUM_WINDOWS];
 };

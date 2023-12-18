@@ -619,16 +619,16 @@ update_status ModuleDebugDraw::PreUpdate()
 
 update_status  ModuleDebugDraw::Update()
 {
-    float4x4 proj = App->GetCamera()->GetProjection();
-    float4x4 view = App->GetCamera()->GetView();
+    float4x4* proj = App->GetCamera()->GetProjection();
+    float3x4* view = App->GetCamera()->GetView();
     //draw Debug Grid
     int w; int h;
     SDL_GetWindowSize(App->GetWindow()->window, &w, &h);
-    Draw(view, proj, w, h);
+    Draw(*view, *proj, w, h);
 	return UPDATE_CONTINUE;
 }
 
-void ModuleDebugDraw::Draw(const float4x4& view, const float4x4& proj, unsigned width, unsigned height)
+void ModuleDebugDraw::Draw(const float3x4& view, const float4x4& proj, unsigned width, unsigned height)
 {
     implementation->width     = width;
     implementation->height    = height;

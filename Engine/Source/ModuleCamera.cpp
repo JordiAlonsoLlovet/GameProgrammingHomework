@@ -15,7 +15,7 @@ ModuleCamera::ModuleCamera() {}
 ModuleCamera::~ModuleCamera() {}
 
 bool ModuleCamera::Init() {
-	currentAspect = SCREEN_HEIGHT / (double)SCREEN_WIDTH;
+	currentAspect = SCREEN_HEIGHT / (float)SCREEN_WIDTH;
 	camera.type = FrustumType::PerspectiveFrustum;
 	camera.pos = float3(0.0f, 1.0f, 5.0f);
 	camera.front = -float3::unitZ;
@@ -24,25 +24,25 @@ bool ModuleCamera::Init() {
 	camera.farPlaneDistance = 100.0f;
 	camera.horizontalFov = math::pi / 2.0f;
 	camera.verticalFov = 2.f * atanf(tanf(camera.horizontalFov * 0.5f)* currentAspect);
+	view = camera.ViewMatrix();
+	projection = camera.ProjectionMatrix();
     return true;
 }
 
 update_status ModuleCamera::Update() {
-	static float cameraSpeed = CAMERA_SPEED;
-	static float f = 90;
 	if (App->GetEditor()->ShowWindow(CONFIG_W)) {
 		ImGui::Begin(CONFIG_W);
 		ImGui::SeparatorText("Camera");
 		ImGui::SliderFloat("Movement speed", &cameraSpeed, 0.0f, CAMERA_SPEED*10);
-		if (ImGui::SliderFloat("FOV", &f, 0, 180))
-			SetFOV(pi * f / 180);
+		if (ImGui::SliderFloat("FOV", &fov, 0, 180))
+			SetFOV(pi * fov / 180);
 		ImGui::SliderFloat("Render distance", &camera.farPlaneDistance, 10.0f, 500.0f);
 		ImGui::Text("Camera Position: (%.1f, %.1f, %.1f)", camera.pos.x, camera.pos.y, camera.pos.z);
 		ImGui::Checkbox("Orbiting", &orbiting);
 		ImGui::End();
 	}
 	
-	float delta = App->GetClock()->GetDeltaTime() / (double)CLOCKS_PER_SEC;
+	float delta = App->GetClock()->GetDeltaTime() / (float)CLOCKS_PER_SEC;
 	float deltaMove = delta * cameraSpeed;
 	float deltaTurn = delta * CAMERA_TURNING_SPEED;
 	if (App->GetInput()->GetKey(SDL_SCANCODE_O) == KEY_DOWN) {
@@ -92,6 +92,9 @@ update_status ModuleCamera::Update() {
 
 		camera.pos += m;
 	}
+
+	view = camera.ViewMatrix();
+	projection = camera.ProjectionMatrix();
     return UPDATE_CONTINUE;
 }
 
@@ -100,27 +103,25 @@ bool ModuleCamera::CleanUp()
     return true;
 }
 
-float4x4 ModuleCamera::GetView()
+float3x4* ModuleCamera::GetView()
 {
-	return camera.ViewMatrix();
+	return &view;
 }
 
-float4x4 ModuleCamera::GetProjection()
+float4x4* ModuleCamera::GetProjection()
 {
-	return camera.ProjectionMatrix();
+	return &projection;
 }
 
-bool ModuleCamera::SetAspectRatio(float aspect) {
+void ModuleCamera::SetAspectRatio(float aspect) {
 	camera.verticalFov = 2.f * atanf(tanf(camera.horizontalFov * 0.5f) * aspect);
 	currentAspect = aspect;
-	return 1;
 }
 
-bool ModuleCamera::SetFOV(float fov) 
+void ModuleCamera::SetFOV(float fov) 
 {
 	camera.horizontalFov = fov;
 	SetAspectRatio(currentAspect);
-	return 1;
 }
 
 void ModuleCamera::LookAt(float x, float y, float z)
@@ -129,10 +130,10 @@ void ModuleCamera::LookAt(float x, float y, float z)
 	LookAt(target);
 }
 
-float3 ModuleCamera::MoveCamera(float3 movement)
+float3* ModuleCamera::MoveCamera(const float3 &movement)
 {
 	camera.pos += movement;
-	return camera.pos;
+	return &camera.pos;
 }
 
 void ModuleCamera::RotateV(double alpha)
@@ -148,7 +149,7 @@ void ModuleCamera::RotateH(double alpha)
 	Rotate(alpha, axis);
 }
 
-void ModuleCamera::Rotate(double alpha, float3 axis)
+void ModuleCamera::Rotate(double alpha, const float3 &axis)
 {
 	float3x3 cpMatrix = {
 		0, -axis.z, axis.y,
@@ -170,18 +171,17 @@ void ModuleCamera::LookAt(float3 target)
 
 void ModuleCamera::Orbit(float delta)
 {
-	float orbitSpeed = pi/3;
-	float alpha = delta * orbitSpeed / 2;
-	float radius = camera.pos.xz().Length();
-	float targetRad = 1.5f * App->GetExercice()->GetModelSize();
-	float h = camera.pos.y;
-	float th = App->GetExercice()->GetModelSize() / 2;
+	const float alpha = delta * CAMERA_ORBITING_SPEED / 2;
+	const float radius = camera.pos.xz().Length();
+	const float targetRad = 1.5f * App->GetExercice()->GetModelSize();
+	const float height = camera.pos.y;
+	const float targetHeight = App->GetExercice()->GetModelSize() / 2;
 	RotateH(alpha);
 	float3 movement = 2 * radius * tan(alpha) * camera.front.Cross(camera.up).Normalized();
 	MoveCamera(movement); // Orbiting Movement
 	RotateH(alpha);
-	float3 resizeMove = camera.front.Normalized() * delta * (radius - targetRad) / 3;
-	resizeMove += camera.up.Normalized() * delta * (th - h) / 3;
+	float3 resizeMove = camera.front.Normalized() * delta * (radius - targetRad);
+	resizeMove += camera.up.Normalized() * delta * (targetHeight - height);
 	MoveCamera(resizeMove);
 
 }

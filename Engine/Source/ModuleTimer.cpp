@@ -60,10 +60,12 @@ update_status ModuleTimer::Update() {
 	if (App->GetEditor()->ShowWindow(CONFIG_W)) {
 		ImGui::Begin(CONFIG_W);
 		ImGui::SliderInt("Max FPS", &fpsLimit, 0, 200);
-		const char* t = string_format("FPS: %.0f", fps_log.back());
-		float recordFps = *std::max_element(std::begin(fps_log), std::end(fps_log));
-		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, t, 0.0f, recordFps, ImVec2(310, 100));
-		free((void*)t);
+		if (fps_log.size() > 0) {
+			const char* t = string_format("FPS: %.0f", fps_log.back());
+			float recordFps = *std::max_element(std::begin(fps_log), std::end(fps_log));
+			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, t, 0.0f, recordFps, ImVec2(310, 100));
+			free((void*)t);
+		}
 		ImGui::End();
 	}
 	

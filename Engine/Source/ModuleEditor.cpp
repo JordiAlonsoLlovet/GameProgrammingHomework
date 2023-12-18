@@ -170,8 +170,8 @@ bool ModuleEditor::CleanUp()
     return true;
 }
 
-bool ModuleEditor::ShowWindow(const char* name) {
-    for (MyWindow w : myWindows) {
+bool ModuleEditor::ShowWindow(const char* name) const {
+    for (const MyWindow& w : myWindows) {
         if (w.title == name)
             return w.show;
     }

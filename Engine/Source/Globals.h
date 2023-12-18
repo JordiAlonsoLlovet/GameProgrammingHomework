@@ -27,6 +27,7 @@ enum update_status
 #define TITLE "Super Awesomest Engine"
 #define CAMERA_SPEED 5
 #define CAMERA_TURNING_SPEED pi 
+#define CAMERA_ORBITING_SPEED pi / 3
 
 // Deletes a buffer
 #define RELEASE( x ) \

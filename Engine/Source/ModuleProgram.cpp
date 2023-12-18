@@ -81,9 +81,9 @@ unsigned ModuleProgram::CreateProgram(unsigned vtx_shader, unsigned frg_shader)
 // This function must be called each frame for drawing the triangle
 void ModuleProgram::RenderVBO(unsigned vbo, unsigned program, unsigned texture, float4x4& model)
 {
-	float4x4 proj = App->GetCamera()->GetProjection();
+	float4x4 proj = *App->GetCamera()->GetProjection();
 	
-	float4x4 view = App->GetCamera()->GetView();
+	float4x4 view = *App->GetCamera()->GetView();
 
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, texture);

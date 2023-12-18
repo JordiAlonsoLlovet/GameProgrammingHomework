@@ -74,7 +74,8 @@ bool ModuleBakerHouse::Init()
 	GLuint vertexShader = App->GetProgram()->CompileShader(GL_VERTEX_SHADER, vSource);
 	GLuint fragmentShader = App->GetProgram()->CompileShader(GL_FRAGMENT_SHADER, fSource);
 	program = App->GetProgram()->CreateProgram(vertexShader, fragmentShader);
-
+	free(vSource);
+	free(fSource);
 	
 	return true;
 }
@@ -87,8 +88,8 @@ update_status ModuleBakerHouse::PreUpdate()
 // Called every draw update
 update_status ModuleBakerHouse::Update()
 {
-	float4x4 proj = App->GetCamera()->GetProjection();
-	float4x4 view = App->GetCamera()->GetView();
+	float4x4 proj = *App->GetCamera()->GetProjection();
+	float4x4 view = *App->GetCamera()->GetView();
 	static bool autoScale = true;
 	static float scale = 1.0f;
 	static float rotateX = 0.0f;
@@ -142,10 +143,10 @@ update_status ModuleBakerHouse::Update()
 		ImGui::SeparatorText("Texture");
 		ImGui::Text("Number of textures: %d", textures.size());
 		for (int i = 0; i < textures.size(); ++i) {
-			const Metadata m = App->GetTexture()->GetMetadata(textures[i]);
-			ImGui::Text("Texture %d: %s", i+1, m.name.c_str());
-			ImGui::Text("Size of texture %d: %d x %d", i+1, m.width, m.height);
-			ImGui::Text("Number of Minmap levels: %d", m.minMapLevel);
+			const Metadata meta = App->GetTexture()->GetMetadata(textures[i]);
+			ImGui::Text("Texture %d: %s", i+1, meta.name.c_str());
+			ImGui::Text("Size of texture %d: %d x %d", i+1, meta.width, meta.height);
+			ImGui::Text("Number of Minmap levels: %d", meta.minMapLevel);
 		}
 		ImGui::End();
 	}

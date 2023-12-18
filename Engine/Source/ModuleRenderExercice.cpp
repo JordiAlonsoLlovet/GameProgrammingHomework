@@ -74,8 +74,8 @@ bool ModuleRenderExercice::Init()
 // Called every draw update
 update_status ModuleRenderExercice::Update()
 {	
-	float4x4 proj = App->GetCamera()->GetProjection();
-	float4x4 view = App->GetCamera()->GetView();
+	float4x4 proj = *App->GetCamera()->GetProjection();
+	float4x4 view = *App->GetCamera()->GetView();
 	glBindVertexArray(vao);
 
 	glUseProgram(program);

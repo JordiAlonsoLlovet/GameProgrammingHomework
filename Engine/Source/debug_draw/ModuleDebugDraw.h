@@ -21,7 +21,7 @@ public:
 	update_status   Update();
 	bool            CleanUp();
 
-    void            Draw(const float4x4& view, const float4x4& proj, unsigned width, unsigned height);
+    void            Draw(const float3x4& view, const float4x4& proj, unsigned width, unsigned height);
 private:
 
     static DDRenderInterfaceCoreGL* implementation;
