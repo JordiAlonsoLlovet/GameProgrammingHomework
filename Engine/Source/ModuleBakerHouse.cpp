@@ -219,7 +219,13 @@ void ModuleBakerHouse::ChangeModel(const char* fileDir) {
 	if (pos != std::string::npos && s.substr(dotPos) == ".gltf") {
 		std::string directory = s.substr(0, pos +1).c_str();
 		std::string fileName = s.substr(pos + 1).c_str();
-		CleanUp();
+		for (auto mesh : meshes) {
+			delete mesh;
+		}
+		meshes.clear();
+		for (unsigned texture : textures)
+			glDeleteTextures(1, &texture);
+		textures.clear();
 		LOG("Loading new model.");
 		Load(directory.c_str(), fileName.c_str());
 	}
