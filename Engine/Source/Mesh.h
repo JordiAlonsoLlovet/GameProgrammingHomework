@@ -14,6 +14,7 @@ namespace tinygltf {
 
 class Mesh {
 public:
+	~Mesh();
 	float Load(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive);
 	void LoadEBO(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const tinygltf::Primitive& primitive);
 	void CreateVAO(const tinygltf::Accessor* accessors[NUM_ATTRIBUTES], const unsigned int numAttr);
